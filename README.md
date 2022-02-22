@@ -2,7 +2,7 @@
 Um jogo de futebol de mesa(pebolim) desenvolvido pelos alunos da Universidade do Estado do Amazonas, do curso de Sistemas de Informação.
 Desenvolvedores: Adriano Henrique, Fernando Freires, Guilherme Santos, Guilherme Tapajós, Larry Amaral e Monike Freitas.
   # Tela do jogo
-  De modo geral, há três telas no game:
+  De modo geral, há cinco telas no game:
   1. Tela de início: onde o jogo é introduzido e é possível escolher se este será em single ou em multiplayer.
   2. Tela principal: onde o jogo efetivamente acontece e os controles e comandos são executados.
   3. Tela de pause: exibida após um dos player apertar alguma tecla específica, esta denota, de algum modo, que a partida está pausada.
