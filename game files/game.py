@@ -23,12 +23,12 @@ def select_mode():
         if keys[pygame.K_p]:
             config.selecting = False
             config.single = True
-            pass  # under this start the singleplayer mode game
+            pass
 
         if keys[pygame.K_m]:
             config.selecting = False
             config.multi = True
-            pass  # under this start the multiplayer game
+            pass
 
 
 def game_loop_single():
