@@ -20,7 +20,7 @@ def select_mode():
             if event.type == pygame.QUIT:
                 config.playing = False
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_p]:
+        if keys[pygame.K_s]:
             config.selecting = False
             config.single = True
             pass
