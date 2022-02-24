@@ -2,7 +2,7 @@ import pygame
 
 import config
 from config import screen_dimensions
-from screen import Screen
+from screen import Screen_multi, Screen_selection, Screen_single
 
 
 def comands_verifying():
@@ -11,21 +11,33 @@ def comands_verifying():
             config.playing = False
 
 
-pygame.init()
-pygame.mixer.init()
-
-test_sound1 = pygame.mixer.Sound("assets/brick.wav")
-test_sound2 = pygame.mixer.Sound("assets/paddle.wav")
-
-
-def game_loop():
-    while config.playing:
-
-        Screen(screen_dimensions["width"], screen_dimensions["height"])
+def select_mode():
+    while config.selecting:
+        Screen_selection(screen_dimensions["width"], screen_dimensions["height"])
         pygame.display.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
-            elif event.type == pygame.K_m:
-                test_sound1.play()
+                config.playing = False
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_p]:
+            config.selecting = False
+            config.single = True
+            pass  # under this start the singleplayer mode game
+
+        if keys[pygame.K_m]:
+            config.selecting = False
+            config.multi = True
+            pass  # under this start the multiplayer game
+
+
+def game_loop_single():
+    while config.single:
+        Screen_single(screen_dimensions["width"], screen_dimensions["height"])
+        pygame.display.update()
+
+
+def game_loop_multi():
+    while config.multi:
+        Screen_multi(screen_dimensions["width"], screen_dimensions["height"])
+        pygame.display.update()
