@@ -3,13 +3,16 @@ import pygame
 import config
 from config import screen_dimensions
 from screen import Screen_multi, Screen_selection, Screen_single
-
+from config import pause
+from colors import Colors
 
 def comands_verifying():
+    global pause
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             config.playing = False
-
+        elif event.type == pygame.KEYDOWN:
+            pause = not pause
 
 def select_mode():
     while config.selecting:
@@ -34,36 +37,26 @@ def select_mode():
 def game_loop_single():
     while config.single:
         Screen_single(screen_dimensions["width"], screen_dimensions["height"])
+        screen_single = Screen_single(screen_dimensions["width"], screen_dimensions["height"])
+        Screen_single.draw(Screen_single)
+        comands_verifying()
+        if pause is True:
+            pygame.draw.rect(screen_single.surface, Colors["White"], [460, 240, 15, 50])
+            pygame.draw.rect(screen_single.surface, Colors["White"], [485, 240, 15, 50])
+            pygame.display.update()
+            continue
         pygame.display.update()
 
 
 def game_loop_multi():
     while config.multi:
         Screen_multi(screen_dimensions["width"], screen_dimensions["height"])
+        screen_multi = Screen_multi(screen_dimensions["width"], screen_dimensions["height"])
+        Screen_multi.draw(Screen_multi)
+        comands_verifying()
+        if pause is True:
+            pygame.draw.rect(screen_multi.surface, Colors["White"], [460, 240, 15, 50])
+            pygame.draw.rect(screen_multi.surface, Colors["White"], [485, 240, 15, 50])
+            pygame.display.update()
+            continue
         pygame.display.update()
- 
-
-class Score():
-    pontos_1 = 0
-    pontos_2 = 0
-    
-    def player_1(self):
-        self.pontos_1 +=1 
-        return self.pontos_1
-    
-    def player_2(self):
-        self.pontos_2 +=1
-        return self.pontos_2
-        
-
-    def placar(self):
-        score_font = pygame.font.Font('PressStart2P.ttf', 30)
-        score_text = score_font.render('00 x 00', True, "white", "black")
-        score_text_rect = score_text.get_rect()
-        score_text_rect.center = (480, 30)
-        score_text = score_font.render(str(self.pontos_1) + ' x ' + str(self.pontos_2), True, "white", "black")
-        screen.blit(score_text, score_text_rect)
-    
-
-    
-
