@@ -3,3 +3,4 @@ single = False
 multi = False
 selecting = True
 pause = False
+TRANSITION_TIME = 5
