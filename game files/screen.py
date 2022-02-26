@@ -47,7 +47,7 @@ class Screen_multi:
         pygame.display.set_caption("Evolution Foosball mp- LPC")
 
     def draw(self):
-        screen_multi = Screen_single(
+        screen_multi = Screen_multi(
             screen_dimensions["width"], screen_dimensions["height"])
         pygame.draw.rect(screen_multi.surface,
                          Colors["SaddleBrown"], [0, 0, 960, 60])
