@@ -52,7 +52,7 @@ def game_loop_single():
     aux = 4
 
     while config.single and config.playing:
-        draw("Evolution Foosball sp- LPC", INITIAL_PLAYERS_COORD, (count, 276), pause)
+        draw("Evolution Foosball sp- LPC", INITIAL_PLAYERS_COORD, (count, 276), -1, pause)
         comands_verifying()
         count+=aux
         if count > 500 or count < 300:
@@ -62,5 +62,5 @@ def game_loop_single():
 
 def game_loop_multi():
     while config.multi and config.playing:
-        draw("Evolution Foosball mp- LPC", INITIAL_PLAYERS_COORD, (464, 276), pause)
+        draw("Evolution Foosball mp- LPC", INITIAL_PLAYERS_COORD, (464, 276), -1, pause)
         comands_verifying()
