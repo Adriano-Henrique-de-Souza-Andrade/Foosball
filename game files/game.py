@@ -1,9 +1,8 @@
 import pygame
 
 import config
-from config import screen_dimensions
 from screen import draw, ScreenMulti, ScreenSelection, ScreenSingle
-from config import pause, TRANSITION_TIME
+from config import pause, TRANSITION_TIME, INITIAL_PLAYERS_COORD
 from colors import Colors
 
 
@@ -12,8 +11,6 @@ def comands_verifying():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             config.playing = False
-            pygame.display.quit()
-            pygame.quit()
         elif event.type == pygame.KEYDOWN:
             pause = not pause
 
@@ -22,12 +19,11 @@ def select_mode():
     count = 0
     quiting_time = -100
 
-    while config.selecting:
+    while config.selecting and config.playing:
         screen_count = count
-        if(quiting_time>0):
+        if(quiting_time > 0):
             screen_count = TRANSITION_TIME - (count - quiting_time)
-        ScreenSelection(
-            screen_dimensions["width"], screen_dimensions["height"], screen_count)
+        ScreenSelection(screen_count)
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -49,35 +45,22 @@ def select_mode():
 
         count += 1
 
-
+    
 def game_loop_single():
-    while config.single:
-        screen_single = ScreenSingle(
-            screen_dimensions["width"], screen_dimensions["height"])
-        draw(screen_single)
+    count = 300
+
+    aux = 4
+
+    while config.single and config.playing:
+        draw("Evolution Foosball sp- LPC", INITIAL_PLAYERS_COORD, (count, 276), pause)
         comands_verifying()
-        if pause is True:
-            pygame.draw.rect(screen_single.surface,
-                             Colors["White"], [460, 240, 15, 50])
-            pygame.draw.rect(screen_single.surface,
-                             Colors["White"], [485, 240, 15, 50])
-            pygame.display.update()
-            continue
-        pygame.display.update()
+        count+=aux
+        if count > 500 or count < 300:
+            aux*=-1
+
 
 
 def game_loop_multi():
-    while config.multi:
-        ScreenMulti(screen_dimensions["width"], screen_dimensions["height"])
-        screen_multi = ScreenMulti(
-            screen_dimensions["width"], screen_dimensions["height"])
-        draw(screen_multi)
+    while config.multi and config.playing:
+        draw("Evolution Foosball mp- LPC", INITIAL_PLAYERS_COORD, (464, 276), pause)
         comands_verifying()
-        if pause is True:
-            pygame.draw.rect(screen_multi.surface,
-                             Colors["White"], [460, 240, 15, 50])
-            pygame.draw.rect(screen_multi.surface,
-                             Colors["White"], [485, 240, 15, 50])
-            pygame.display.update()
-            continue
-        pygame.display.update()
