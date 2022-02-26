@@ -1,5 +1,5 @@
 import pygame
-from config import  SCREEN_WIDTH, SCREEN_HEIGHT, TRANSITION_TIME, COLUMN_COLORS
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, TRANSITION_TIME, COLUMN_COLORS, PIPE_WIDTH
 from colors import Colors
 
 
@@ -7,8 +7,9 @@ def animation_counter(final_value, count, total_frames):
     return final_value - count*(final_value/total_frames)
 
 
-
-def draw(caption, player_coords, ball_coord, pause):
+def draw(caption, player_coords, ball_coord, column_kicking,  pause):
+    global count
+    global pause_time
     self = Screen(caption)
     pygame.display.set_caption(caption)
     floor = pygame.image.load("img/floor.png").convert_alpha()
@@ -18,35 +19,53 @@ def draw(caption, player_coords, ball_coord, pause):
     ball = pygame.image.load("img/ball.png").convert_alpha()
     pipe_down = pygame.image.load("img/pipe_down.png").convert_alpha()
     pipe_up = pygame.image.load("img/pipe_up.png").convert_alpha()
-    player_red = pygame.image.load("img/player_red.png").convert_alpha()
-    player_blue = pygame.image.load("img/player_blue.png").convert_alpha()
+    player_red = [
+        pygame.image.load("img/player_red.png").convert_alpha(),
+        pygame.image.load("img/player_red_kicking_left.png").convert_alpha(),
+        pygame.image.load("img/player_red_kicking_right.png").convert_alpha(),
+    ]
+
+    player_blue = [
+        pygame.image.load("img/player_blue.png").convert_alpha(),
+        pygame.image.load("img/player_blue_kicking_left.png").convert_alpha(),
+        pygame.image.load("img/player_blue_kicking_right.png").convert_alpha(),
+    ]
 
     self.surface.blit(floor, (0, 0))
     self.surface.blit(table, (75, 60))
     self.surface.blit(ball, ball_coord)
 
     for i in range(len(player_coords)):
+        column_state = 0
         column = player_coords[i]
+        pipe_coord = (column[0][0] - PIPE_WIDTH/2, -2)
+
+        if column_kicking == i:
+            if column[0][0] > ball_coord[0]:
+                column_state = 1
+            else:
+                column_state = 2
 
         if COLUMN_COLORS[i] == "red":
-            self.surface.blit(pipe_up, (column[0][0], -2))
+            self.surface.blit(pipe_up, (pipe_coord))
         else:
-            self.surface.blit(pipe_down, (column[0][0], -2))
+            self.surface.blit(pipe_down, (pipe_coord))
 
         for position in column:
+            player_position = (position[0] - PLAYER_WIDTH/2, position[1])
             if COLUMN_COLORS[i] == "red":
-                self.surface.blit(player_red, position)
+                self.surface.blit(player_red[column_state], player_position)
             else:
-                self.surface.blit(player_blue, position)
+                self.surface.blit(player_blue[column_state], player_position)
+
+    self.surface.blit(border, (75, 60))
+    self.surface.blit(placar, (0, 0))
 
     if pause is True:
         pygame.draw.rect(self.surface,
                          Colors["White"], [460, 240, 15, 50])
         pygame.draw.rect(self.surface,
                          Colors["White"], [485, 240, 15, 50])
-    self.surface.blit(border, (75, 60))
-    self.surface.blit(placar, (0, 0))
-
     pygame.display.update()
 
 
