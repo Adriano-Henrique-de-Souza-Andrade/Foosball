@@ -2,7 +2,7 @@ import pygame
 
 import config
 from config import screen_dimensions
-from screen import ScreenMulti, ScreenSelection, ScreenSingle
+from screen import draw, ScreenMulti, ScreenSelection, ScreenSingle
 from config import pause, TRANSITION_TIME
 from colors import Colors
 
@@ -26,7 +26,6 @@ def select_mode():
         screen_count = count
         if(quiting_time>0):
             screen_count = TRANSITION_TIME - (count - quiting_time)
-        print(screen_count)
         ScreenSelection(
             screen_dimensions["width"], screen_dimensions["height"], screen_count)
         pygame.display.update()
@@ -53,10 +52,9 @@ def select_mode():
 
 def game_loop_single():
     while config.single:
-        ScreenSingle(screen_dimensions["width"], screen_dimensions["height"])
         screen_single = ScreenSingle(
             screen_dimensions["width"], screen_dimensions["height"])
-        ScreenSingle.draw(ScreenSingle)
+        draw(screen_single)
         comands_verifying()
         if pause is True:
             pygame.draw.rect(screen_single.surface,
@@ -73,7 +71,7 @@ def game_loop_multi():
         ScreenMulti(screen_dimensions["width"], screen_dimensions["height"])
         screen_multi = ScreenMulti(
             screen_dimensions["width"], screen_dimensions["height"])
-        ScreenMulti.draw(ScreenMulti)
+        draw(screen_multi)
         comands_verifying()
         if pause is True:
             pygame.draw.rect(screen_multi.surface,

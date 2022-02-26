@@ -6,7 +6,7 @@ def animation_counter(final_value, count, total_frames):
     return final_value - count*(final_value/total_frames)
 
 
-def draw_screen(self):
+def draw(self):
     floor = pygame.image.load("img/floor.png").convert_alpha()
     table = pygame.image.load("img/table.png").convert_alpha()
     border = pygame.image.load("img/border.png").convert_alpha()
@@ -26,10 +26,6 @@ class ScreenSingle:
         self.surface = pygame.display.set_mode([width, height])
         pygame.display.set_caption("Evolution Foosball sp- LPC")
 
-    def draw(self):
-        draw_screen(ScreenSingle(
-            screen_dimensions["width"], screen_dimensions["height"]))
-
 
 class ScreenMulti:
     def __init__(self, width, height):
@@ -37,10 +33,6 @@ class ScreenMulti:
         self.height = height
         self.surface = pygame.display.set_mode([width, height])
         pygame.display.set_caption("Evolution Foosball mp- LPC")
-
-    def draw(self):
-        draw_screen(ScreenSingle(
-            screen_dimensions["width"], screen_dimensions["height"]))
 
 
 class ScreenSelection:
