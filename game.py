@@ -7,7 +7,7 @@ from colors import Colors
 
 pygame.mixer.init()
 pygame.mixer.music.load("sound/ost/old and classic foosball.mp3")
-pygame.mixer.music.play()
+pygame.mixer.music.play(-1)
 
 def comands_verifying():
     global pause
@@ -54,7 +54,7 @@ def game_loop_single():
 
     aux = 4
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
-    pygame.mixer.music.play()
+    pygame.mixer.music.play(-1)
     while config.single and config.playing:
         draw("Evolution Foosball sp- LPC", INITIAL_PLAYERS_COORD, (count, 276), -1, pause)
         comands_verifying()
