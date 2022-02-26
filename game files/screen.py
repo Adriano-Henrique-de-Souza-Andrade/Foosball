@@ -1,6 +1,4 @@
-from math import floor
 import pygame
-from colors import Colors
 from config import screen_dimensions, TRANSITION_TIME
 
 
