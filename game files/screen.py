@@ -17,7 +17,7 @@ def draw_screen(self):
     self.surface.blit(placar, (0, 0))
 
 
-class Screen_single:
+class ScreenSingle:
     surface: pygame.Surface
 
     def __init__(self, width, height):
@@ -27,11 +27,11 @@ class Screen_single:
         pygame.display.set_caption("Evolution Foosball sp- LPC")
 
     def draw(self):
-        draw_screen(Screen_single(
+        draw_screen(ScreenSingle(
             screen_dimensions["width"], screen_dimensions["height"]))
 
 
-class Screen_multi:
+class ScreenMulti:
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -39,11 +39,11 @@ class Screen_multi:
         pygame.display.set_caption("Evolution Foosball mp- LPC")
 
     def draw(self):
-        draw_screen(Screen_single(
+        draw_screen(ScreenSingle(
             screen_dimensions["width"], screen_dimensions["height"]))
 
 
-class Screen_selection:
+class ScreenSelection:
     def __init__(self, width, height, count):
         if (count < TRANSITION_TIME):
             animation_count = count
