@@ -5,6 +5,9 @@ from screen import draw, ScreenMulti, ScreenSelection, ScreenSingle
 from config import pause, TRANSITION_TIME, INITIAL_PLAYERS_COORD
 from colors import Colors
 
+pygame.mixer.init()
+pygame.mixer.music.load("sound/ost/old and classic foosball.mp3")
+pygame.mixer.music.play()
 
 def comands_verifying():
     global pause
@@ -50,7 +53,8 @@ def game_loop_single():
     count = 300
 
     aux = 4
-
+    pygame.mixer.music.load("sound/ost/counting on you.mp3")
+    pygame.mixer.music.play()
     while config.single and config.playing:
         draw("Evolution Foosball sp- LPC", INITIAL_PLAYERS_COORD, (count, 276), -1, pause)
         comands_verifying()
@@ -61,6 +65,11 @@ def game_loop_single():
 
 
 def game_loop_multi():
+    count = 300
+
+    aux = 4
+    pygame.mixer.music.load("sound/ost/counting on you.mp3")
+    pygame.mixer.music.play()
     while config.multi and config.playing:
         draw("Evolution Foosball mp- LPC", INITIAL_PLAYERS_COORD, (464, 276), -1, pause)
         comands_verifying()
