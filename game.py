@@ -50,8 +50,12 @@ def select_mode():
 
 
 def game_loop_single():
+    ball_rectx = 467
+    ball_recty = 260
+    ball_velocity = 6
+    ball_dx = ball_velocity
+    ball_dy = ball_velocity * (-1)
     players_coord = INITIAL_PLAYERS_COORD
-
     pipe_blmv = -2
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
@@ -71,13 +75,18 @@ def game_loop_single():
                         player[0], player[1] + COLUMNS_VELOCITY[i] * blue_direction)
 
         draw("Evolution Foosball sp- LPC", players_coord,
-             (464, 276), pipe_blmv, 0, -1, pause)
+             (ball_rectx, ball_recty), pipe_blmv, 0, -1, pause)
         comands_verifying()
-
+        ball_rectx += ball_dx
+        ball_recty += ball_dy
 
 def game_loop_multi():
+    ball_rectx = 467
+    ball_recty = 260
+    ball_velocity = 6
+    ball_dx = ball_velocity
+    ball_dy = ball_velocity * (-1)
     players_coord = INITIAL_PLAYERS_COORD
-
     pipe_blmv = -2
     pipe_rdmv = -2
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
@@ -110,5 +119,7 @@ def game_loop_multi():
                         player[0], player[1] + COLUMNS_VELOCITY[i] * red_direction)
 
         draw("Evolution Foosball sp- LPC", players_coord,
-             (464, 276), pipe_blmv, pipe_rdmv, -1, pause)
+             (ball_rectx, ball_recty), pipe_blmv, pipe_rdmv, -1, pause)
         comands_verifying()
+        ball_rectx += ball_dx
+        ball_recty += ball_dy
