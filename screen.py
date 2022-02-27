@@ -120,8 +120,8 @@ class Screen:
         self.surface.blit(self.ball, self.ball_coord)
 
         for i in range(len(self.player_coords)):
-            self.draw_pipes(i)
             self.draw_players_column(i)
+            self.draw_pipes(i)
 
         self.surface.blit(self.border, (75, 60))
         self.surface.blit(self.placar, (0, 0))
