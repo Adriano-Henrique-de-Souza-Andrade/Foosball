@@ -52,18 +52,17 @@ def select_mode():
 def game_loop_single():
     players_coord = INITIAL_PLAYERS_COORD
 
-    add_y = -2
-    blue_direction = 0
+    pipe_blmv = -2
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
     while config.single and config.playing:
         blue_direction = 0
-        if pygame.key.get_pressed()[pygame.K_w] and add_y > -35:
+        if pygame.key.get_pressed()[pygame.K_w] and pipe_blmv > -35:
             blue_direction = -1
 
-        elif pygame.key.get_pressed()[pygame.K_s] and add_y < 18:
+        elif pygame.key.get_pressed()[pygame.K_s] and pipe_blmv < 18:
             blue_direction = 1
-        add_y += 3 * blue_direction
+        pipe_blmv += 3 * blue_direction
 
         for i, column in enumerate(players_coord):
             for j, player in enumerate(column):
@@ -72,17 +71,44 @@ def game_loop_single():
                         player[0], player[1] + COLUMNS_VELOCITY[i] * blue_direction)
 
         draw("Evolution Foosball sp- LPC", players_coord,
-             (464, 276), add_y, 0, -1, pause)
+             (464, 276), pipe_blmv, 0, -1, pause)
         comands_verifying()
 
 
 def game_loop_multi():
-    count = 300
+    players_coord = INITIAL_PLAYERS_COORD
 
-    aux = 4
+    pipe_blmv = -2
+    pipe_rdmv = -2
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
-    pygame.mixer.music.play()
+    pygame.mixer.music.play(-1)
     while config.multi and config.playing:
-        draw("Evolution Foosball mp- LPC",
-             INITIAL_PLAYERS_COORD, (464, 276), -1, pause)
+        blue_direction = 0
+        red_direction = 0
+        if pygame.key.get_pressed()[pygame.K_w] and pipe_blmv > -35:
+            blue_direction = -1
+
+        if pygame.key.get_pressed()[pygame.K_s] and pipe_blmv < 18:
+            blue_direction = 1
+        pipe_blmv += 3 * blue_direction
+        if pygame.key.get_pressed()[pygame.K_UP] and pipe_rdmv > -35:
+            red_direction = -1
+        if pygame.key.get_pressed()[pygame.K_DOWN] and pipe_rdmv < 18:
+            red_direction = 1
+        pipe_rdmv += 3 * red_direction
+
+        for i, column in enumerate(players_coord):
+            for j, player in enumerate(column):
+                if COLUMN_COLORS[i] == "blue":
+                    players_coord[i][j] = (
+                        player[0], player[1] + COLUMNS_VELOCITY[i] * blue_direction)
+
+        for i, column in enumerate(players_coord):
+            for j, player in enumerate(column):
+                if COLUMN_COLORS[i] == "red":
+                    players_coord[i][j] = (
+                        player[0], player[1] + COLUMNS_VELOCITY[i] * red_direction)
+
+        draw("Evolution Foosball sp- LPC", players_coord,
+             (464, 276), pipe_blmv, pipe_rdmv, -1, pause)
         comands_verifying()
