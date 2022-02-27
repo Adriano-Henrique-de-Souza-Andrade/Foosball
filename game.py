@@ -1,7 +1,7 @@
 import pygame
 
 import config
-from screen import draw,  ScreenSelection
+from screen import ScreenSelection, Screen
 from config import pause, TRANSITION_TIME, INITIAL_PLAYERS_COORD, COLUMNS_VELOCITY, COLUMN_COLORS
 
 pygame.mixer.init()
@@ -50,11 +50,18 @@ def select_mode():
 
 
 def game_loop_single():
+    ball_rectx = 467
+    ball_recty = 260
+    ball_velocity = 6
+    ball_dx = ball_velocity
+    ball_dy = ball_velocity * (-1)
     players_coord = INITIAL_PLAYERS_COORD
-
     pipe_blmv = -2
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
+
+    screen = Screen("Evolution Foosball sp- LPC")
+
     while config.single and config.playing:
         blue_direction = 0
         if pygame.key.get_pressed()[pygame.K_w] and pipe_blmv > -35:
@@ -70,18 +77,40 @@ def game_loop_single():
                     players_coord[i][j] = (
                         player[0], player[1] + COLUMNS_VELOCITY[i] * blue_direction)
 
-        draw("Evolution Foosball sp- LPC", players_coord,
-             (464, 276), pipe_blmv, 0, -1, pause)
         comands_verifying()
+        ball_rectx += ball_dx
+        ball_recty += ball_dy
+        if ball_recty <= 95:
+            ball_dy = ball_velocity
+        if ball_recty >= 417:
+            ball_dy = ball_velocity * (-1)
+        if ball_rectx <= 121 and (ball_recty <= 100 or ball_recty >= 310):
+            ball_dx = ball_velocity
+        if ball_rectx >= 812 and (ball_recty <= 100 or ball_recty >= 310):
+            ball_dx = ball_velocity * (-1)
 
+        screen.set_pipes(pipe_blmv, 0)
+        screen.set_players(players_coord)
+        screen.set_ball((ball_rectx, ball_recty))
+        screen.set_column_kicking(-1)
+        screen.set_score((0, 0))
+        screen.set_pause(pause)
+        screen.draw()
 
 def game_loop_multi():
+    ball_rectx = 467
+    ball_recty = 260
+    ball_velocity = 6
+    ball_dx = ball_velocity
+    ball_dy = ball_velocity * (-1)
     players_coord = INITIAL_PLAYERS_COORD
-
     pipe_blmv = -2
     pipe_rdmv = -2
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
+
+    screen = Screen("Evolution Foosball mp- LPC")
+
     while config.multi and config.playing:
         blue_direction = 0
         red_direction = 0
@@ -109,6 +138,22 @@ def game_loop_multi():
                     players_coord[i][j] = (
                         player[0], player[1] + COLUMNS_VELOCITY[i] * red_direction)
 
-        draw("Evolution Foosball sp- LPC", players_coord,
-             (464, 276), pipe_blmv, pipe_rdmv, -1, pause)
         comands_verifying()
+        ball_rectx += ball_dx
+        ball_recty += ball_dy
+        if ball_recty <= 95:
+            ball_dy = ball_velocity
+        if ball_recty >= 417:
+            ball_dy = ball_velocity * (-1)
+        if ball_rectx <= 121 and (ball_recty <= 100 or ball_recty >= 310):
+            ball_dx = ball_velocity
+        if ball_rectx >= 812 and (ball_recty <= 100 or ball_recty >= 310):
+            ball_dx = ball_velocity * (-1)
+        
+        screen.set_pipes(pipe_blmv, pipe_rdmv)
+        screen.set_players(players_coord)
+        screen.set_ball((ball_rectx, ball_recty))
+        screen.set_column_kicking(-1)
+        screen.set_score((0, 0))
+        screen.set_pause(pause)
+        screen.draw()

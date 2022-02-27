@@ -9,99 +9,6 @@ pause_time = -100
 def animation_counter(final_value, count, total_frames):
     return final_value - count * (final_value / total_frames)
 
-
-def draw(caption, player_coords, ball_coord, pipe_blue, pipe_red, column_kicking, pause):
-    global count
-    global pause_time
-    self = Screen(caption)
-    floor = pygame.image.load("img/floor.png").convert_alpha()
-    table = pygame.image.load("img/table.png").convert_alpha()
-    border = pygame.image.load("img/border.png").convert_alpha()
-    placar = pygame.image.load("img/placar.png").convert_alpha()
-    ball = pygame.image.load("img/ball.png").convert_alpha()
-    pipe_down = pygame.image.load("img/pipe_down.png").convert_alpha()
-    pipe_up = pygame.image.load("img/pipe_up.png").convert_alpha()
-    player_red = [
-        pygame.image.load("img/player_red.png").convert_alpha(),
-        pygame.image.load("img/player_red_kicking_left.png").convert_alpha(),
-        pygame.image.load("img/player_red_kicking_right.png").convert_alpha(),
-    ]
-
-    player_blue = [
-        pygame.image.load("img/player_blue.png").convert_alpha(),
-        pygame.image.load("img/player_blue_kicking_left.png").convert_alpha(),
-        pygame.image.load("img/player_blue_kicking_right.png").convert_alpha(),
-    ]
-
-    self.surface.blit(floor, (0, 0))
-    self.surface.blit(table, (75, 60))
-    self.surface.blit(ball, ball_coord)
-
-    for i in range(len(player_coords)):
-        column_state = 0
-        column = player_coords[i]
-
-        if column_kicking == i:
-            if column[0][0] > ball_coord[0]:
-                column_state = 1
-            else:
-                column_state = 2
-
-        if COLUMN_COLORS[i] == "red":
-
-            self.surface.blit(
-                pipe_up, (column[0][0] - PIPE_WIDTH / 2, pipe_red))
-        else:
-
-            self.surface.blit(
-                pipe_down, (column[0][0] - PIPE_WIDTH / 2, pipe_blue))
-
-        for position in column:
-            if COLUMN_COLORS[i] == "red":
-                player_position = (position[0] - PLAYER_WIDTH / 2, position[1])
-                self.surface.blit(player_red[column_state], player_position)
-            else:
-                player_position = (position[0] - PLAYER_WIDTH / 2, position[1])
-                self.surface.blit(player_blue[column_state], player_position)
-
-    self.surface.blit(border, (75, 60))
-    self.surface.blit(placar, (0, 0))
-
-    board = pygame.image.load("img/board.png").convert_alpha()
-
-    animation_count = -1
-
-    if pause is True:
-        pause_transition = 3
-        if pause_time < 0:
-            pause_time = count
-
-        if (count-pause_time < pause_transition):
-            animation_count = count-pause_time
-        elif count == pause_transition:
-            animation_count = pause_transition+0.2
-        else:
-            animation_count = pause_transition
-
-        behind = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-        behind.set_alpha(animation_count*(128/pause_transition))
-        behind.fill(Colors["Black"])
-
-        self.surface.blit(behind, (0, 0))
-        self.surface.blit(
-            board, (0, animation_counter(-100, animation_count, pause_transition)))
-
-        pygame.draw.rect(self.surface,
-                         Colors["White"], [460, 240 + animation_counter(-100, animation_count, pause_transition), 15, 50])
-        pygame.draw.rect(self.surface,
-                         Colors["White"], [485, 240 + animation_counter(-100, animation_count, pause_transition), 15, 50])
-    else:
-        pause_time = -100
-
-    count += 1
-    pygame.display.update()
-
-
 class Screen:
     surface: pygame.Surface
     player_coords = []
@@ -158,6 +65,9 @@ class Screen:
     def set_ball(self, ball_coord):
         self.ball_coord = ball_coord
 
+    def set_column_kicking(self, column_kicking):
+        self.column_kicking = column_kicking
+
     def set_pause(self, pause):
         if pause:
             if self.pause_start < 0:
@@ -202,7 +112,6 @@ class Screen:
 
     def draw(self):
         transition = 3
-        animation_count = -1
 
         self.surface.blit(self.floor, (0, 0))
         self.surface.blit(self.table, (75, 60))
@@ -215,33 +124,14 @@ class Screen:
         self.surface.blit(self.border, (75, 60))
         self.surface.blit(self.placar, (0, 0))
 
-        direction = 0
-        pause_time = 0
-
-        if self.pause_start > 0:
-            direction = 0
-            pause_time = self.pause_start
-        else:
-            direction = transition
-            pause_time = self.pause_end
-        
-        if self.count - pause_time < transition:
-            if direction == 0:
-                animation_count = (self.count - pause_time)  
-            else:
-                animation_count = direction - (self.count - pause_time) 
-        elif self.count == transition:
-            animation_count = transition+0.2 - direction
-        else:
-            animation_count = transition - direction
-
-        if animation_count > 0 or animation_count > transition:
+        animation_count = transition
+        if self.pause_start > 0 :
             behind = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
             behind.set_alpha(animation_count*(128/transition))
             behind.fill(Colors["Black"])
 
             self.surface.blit(behind, (0, 0))
-            self.surface.blit(self.board, (0, animation_counter(-100, animation_count, self.pause_start)))
+            self.surface.blit(self.board, (0, animation_counter(-100, animation_count, transition)))
 
             pygame.draw.rect(self.surface,
                                 Colors["White"], [460, 240 + animation_counter(-100, animation_count, transition), 15, 50])
@@ -249,7 +139,7 @@ class Screen:
                                 Colors["White"], [485, 240 + animation_counter(-100, animation_count, transition), 15, 50])
 
         self.count += 1
-        print(self.count, animation_count)
+        
         pygame.display.update()
 
 
