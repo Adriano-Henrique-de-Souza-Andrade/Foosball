@@ -15,9 +15,9 @@ def comands_verifying():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             config.playing = False
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_p]: 
-            pause = not pause
+        # keys = pygame.key.get_pressed()
+        # if keys[pygame.K_p]: 
+        #     pause = not pause
 
 
 def select_mode():
