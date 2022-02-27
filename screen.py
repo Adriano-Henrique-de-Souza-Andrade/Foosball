@@ -1,3 +1,4 @@
+from audioop import mul
 import pygame
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, TRANSITION_TIME, COLUMN_COLORS, PIPE_WIDTH
 from colors import Colors
@@ -125,6 +126,16 @@ class ScreenSelection:
 
         title = pygame.image.load('img/initial_page/title.png').convert_alpha()
 
+        # text selection
+        pygame.font.init()
+
+        font = pygame.font.Font("fonts/Pixeled.ttf", 15)
+        font_enter = pygame.font.Font("fonts/Pixeled.ttf", 8)
+        multiplayer = font.render("Multiplayer mode", 1, (255,255,255)).convert_alpha()
+        singleplayer = font.render("Singleplayer mode", 1, (255,255,255)).convert_alpha()
+        enter_mode = font_enter.render("Press ENTER to start the game", 1, (255,255,255)).convert_alpha()
+
+        # self.surface.blit(text, (5, 350))
         self.surface.blit(grass, (0, 0))
         self.surface.blit(pipes, (0, 0))
         self.surface.blit(
@@ -140,6 +151,13 @@ class ScreenSelection:
             black_layer, (animation_counter(200, animation_count, TRANSITION_TIME), 0))
         self.surface.blit(
             title, (0, animation_counter(-400, animation_count, TRANSITION_TIME)))
+        self.surface.blit(
+            singleplayer, (150, animation_counter(400, animation_count/3, TRANSITION_TIME)))
+        self.surface.blit(
+            multiplayer, (155, animation_counter(450, animation_count/3, TRANSITION_TIME)))
+        self.surface.blit(
+            enter_mode, (155, animation_counter(500, animation_count/3.5, TRANSITION_TIME)))
+            
 
         pygame.display.set_caption("Tela 1 do jogo")
         pygame.display.flip()
