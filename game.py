@@ -1,9 +1,8 @@
 import pygame
 
 import config
-from screen import draw, ScreenMulti, ScreenSelection, ScreenSingle
-from config import pause, TRANSITION_TIME, INITIAL_PLAYERS_COORD
-from colors import Colors
+from screen import draw,  ScreenSelection
+from config import pause, TRANSITION_TIME, INITIAL_PLAYERS_COORD, COLUMNS_VELOCITY, COLUMN_COLORS
 
 pygame.mixer.init()
 pygame.mixer.music.load("sound/ost/old and classic foosball.mp3")
@@ -16,7 +15,7 @@ def comands_verifying():
         if event.type == pygame.QUIT:
             config.playing = False
         # keys = pygame.key.get_pressed()
-        # if keys[pygame.K_p]: 
+        # if keys[pygame.K_p]:
         #     pause = not pause
 
 
@@ -52,35 +51,30 @@ def select_mode():
 
 
 def game_loop_single():
-
-    count = 300
-    aux = 4
+    players_coord = INITIAL_PLAYERS_COORD
 
     add_y = -2
-    y_axis_mdf = 0
-    y_axis_atk = 0
-    y_axis_dfd = 0
+    blue_direction = 0
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
     while config.single and config.playing:
-
+        blue_direction = 0
         if pygame.key.get_pressed()[pygame.K_w] and add_y > -35:
-            add_y -= 3
-            y_axis_mdf -= 4
-            y_axis_dfd -= 6
-            y_axis_atk -= 5
-        elif pygame.key.get_pressed()[pygame.K_s] and add_y < 18:
-            add_y += 3
-            y_axis_mdf += 4
-            y_axis_dfd += 6
-            y_axis_atk += 5
+            blue_direction = -1
 
-        y_axis = [y_axis_mdf, y_axis_dfd, y_axis_atk]
-        draw("Evolution Foosball sp- LPC", INITIAL_PLAYERS_COORD, (464, 276), add_y, y_axis, -1, pause)
+        elif pygame.key.get_pressed()[pygame.K_s] and add_y < 18:
+            blue_direction = 1
+        add_y += 3 * blue_direction
+
+        for i, column in enumerate(players_coord):
+            for j, player in enumerate(column):
+                if COLUMN_COLORS[i] == "blue":
+                    players_coord[i][j] = (
+                        player[0], player[1] + COLUMNS_VELOCITY[i] * blue_direction)
+
+        draw("Evolution Foosball sp- LPC", players_coord,
+             (464, 276), add_y, 0, -1, pause)
         comands_verifying()
-        count += aux
-        if count > 500 or count < 300:
-            aux *= -1
 
 
 def game_loop_multi():
@@ -90,5 +84,6 @@ def game_loop_multi():
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play()
     while config.multi and config.playing:
-        draw("Evolution Foosball mp- LPC", INITIAL_PLAYERS_COORD, (464, 276), -1, pause)
+        draw("Evolution Foosball mp- LPC",
+             INITIAL_PLAYERS_COORD, (464, 276), -1, pause)
         comands_verifying()

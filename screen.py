@@ -6,11 +6,12 @@ from colors import Colors
 count = 0
 pause_time = -100
 
+
 def animation_counter(final_value, count, total_frames):
     return final_value - count * (final_value / total_frames)
 
 
-def draw(caption, player_coords, ball_coord, add_y, y_axis, column_kicking, pause):
+def draw(caption, player_coords, ball_coord, pipe_blue, pipe_red, column_kicking, pause):
     global count
     global pause_time
     self = Screen(caption)
@@ -41,7 +42,6 @@ def draw(caption, player_coords, ball_coord, add_y, y_axis, column_kicking, paus
     for i in range(len(player_coords)):
         column_state = 0
         column = player_coords[i]
-        pipe_coord = (column[0][0] - PIPE_WIDTH / 2, add_y)
 
         if column_kicking == i:
             if column[0][0] > ball_coord[0]:
@@ -50,21 +50,20 @@ def draw(caption, player_coords, ball_coord, add_y, y_axis, column_kicking, paus
                 column_state = 2
 
         if COLUMN_COLORS[i] == "red":
-            self.surface.blit(pipe_up, (pipe_coord))
+
+            self.surface.blit(
+                pipe_up, (column[0][0] - PIPE_WIDTH / 2, pipe_red))
         else:
-            self.surface.blit(pipe_down, (pipe_coord))
+
+            self.surface.blit(
+                pipe_down, (column[0][0] - PIPE_WIDTH / 2, pipe_blue))
 
         for position in column:
             if COLUMN_COLORS[i] == "red":
                 player_position = (position[0] - PLAYER_WIDTH / 2, position[1])
                 self.surface.blit(player_red[column_state], player_position)
             else:
-                if i == 1:
-                    player_position = (position[0] - PLAYER_WIDTH / 2, position[1] + y_axis[1])
-                elif i == 3:
-                    player_position = (position[0] - PLAYER_WIDTH / 2, position[1] + y_axis[0])
-                else:
-                    player_position = (position[0] - PLAYER_WIDTH / 2, position[1] + y_axis[2])
+                player_position = (position[0] - PLAYER_WIDTH / 2, position[1])
                 self.surface.blit(player_blue[column_state], player_position)
 
     self.surface.blit(border, (75, 60))
@@ -86,13 +85,13 @@ def draw(caption, player_coords, ball_coord, add_y, y_axis, column_kicking, paus
         else:
             animation_count = pause_transition
 
-
         behind = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         behind.set_alpha(animation_count*(128/pause_transition))
         behind.fill(Colors["Black"])
 
         self.surface.blit(behind, (0, 0))
-        self.surface.blit(board, (0, animation_counter(-100, animation_count, pause_transition)))
+        self.surface.blit(
+            board, (0, animation_counter(-100, animation_count, pause_transition)))
 
         pygame.draw.rect(self.surface,
                          Colors["White"], [460, 240 + animation_counter(-100, animation_count, pause_transition), 15, 50])
@@ -101,7 +100,7 @@ def draw(caption, player_coords, ball_coord, add_y, y_axis, column_kicking, paus
     else:
         pause_time = -100
 
-    count+=1
+    count += 1
     pygame.display.update()
 
 
@@ -113,24 +112,6 @@ class Screen:
         self.height = SCREEN_HEIGHT
         self.surface = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
         pygame.display.set_caption(title)
-
-
-class ScreenSingle:
-    surface: pygame.Surface
-
-    def __init__(self):
-        self.width = SCREEN_WIDTH
-        self.height = SCREEN_HEIGHT
-        self.surface = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
-        pygame.display.set_caption("Evolution Foosball sp- LPC")
-
-
-class ScreenMulti:
-    def __init__(self):
-        self.width = SCREEN_WIDTH
-        self.height = SCREEN_HEIGHT
-        self.surface = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
-        pygame.display.set_caption("Evolution Foosball mp- LPC")
 
 
 class ScreenSelection:
@@ -166,9 +147,12 @@ class ScreenSelection:
 
         font = pygame.font.Font("fonts/Pixeled.ttf", 15)
         font_enter = pygame.font.Font("fonts/Pixeled.ttf", 8)
-        multiplayer = font.render("Multiplayer mode", 1, (255, 255, 255)).convert_alpha()
-        singleplayer = font.render("Singleplayer mode", 1, (255, 255, 255)).convert_alpha()
-        enter_mode = font_enter.render("Press ENTER to start the game", 1, (255, 255, 255)).convert_alpha()
+        multiplayer = font.render(
+            "Multiplayer mode", 1, (255, 255, 255)).convert_alpha()
+        singleplayer = font.render(
+            "Singleplayer mode", 1, (255, 255, 255)).convert_alpha()
+        enter_mode = font_enter.render(
+            "Press ENTER to start the game", 1, (255, 255, 255)).convert_alpha()
 
         # self.surface.blit(text, (5, 350))
         self.surface.blit(grass, (0, 0))
