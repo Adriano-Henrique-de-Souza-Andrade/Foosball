@@ -39,7 +39,6 @@ def draw(caption, player_coords, ball_coord, add_y, y_axis, column_kicking, paus
     for i in range(len(player_coords)):
         column_state = 0
         column = player_coords[i]
-        pipe_coord = (column[0][0] - PIPE_WIDTH / 2, add_y)
 
         if column_kicking == i:
             if column[0][0] > ball_coord[0]:
@@ -48,8 +47,10 @@ def draw(caption, player_coords, ball_coord, add_y, y_axis, column_kicking, paus
                 column_state = 2
 
         if COLUMN_COLORS[i] == "red":
+            pipe_coord = (column[0][0] - PIPE_WIDTH / 2, -2)
             self.surface.blit(pipe_up, (pipe_coord))
         else:
+            pipe_coord = (column[0][0] - PIPE_WIDTH / 2, add_y)
             self.surface.blit(pipe_down, (pipe_coord))
 
         for position in column:
