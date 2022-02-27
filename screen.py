@@ -24,12 +24,14 @@ class Screen:
     
     ball_coord = (0, 0)
     score = (0, 0)
-
     def __init__(self, title):
         self.width = SCREEN_WIDTH
         self.height = SCREEN_HEIGHT
         self.surface = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
         pygame.display.set_caption(title)
+
+        self.game_clock = pygame.time.Clock()
+
 
         self.floor = pygame.image.load("img/floor.png").convert_alpha()
         self.table = pygame.image.load("img/table.png").convert_alpha()
@@ -140,7 +142,9 @@ class Screen:
 
         self.count += 1
         
-        pygame.display.update()
+        pygame.display.flip()
+        self.game_clock.tick(60)
+
 
 
 class ScreenSelection:
