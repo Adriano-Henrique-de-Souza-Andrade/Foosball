@@ -5,10 +5,10 @@ from colors import Colors
 
 
 def animation_counter(final_value, count, total_frames):
-    return final_value - count*(final_value/total_frames)
+    return final_value - count * (final_value / total_frames)
 
 
-def draw(caption, player_coords, ball_coord, column_kicking,  pause):
+def draw(caption, player_coords, ball_coord, add_y, y_axis, column_kicking, pause):
     global count
     global pause_time
     self = Screen(caption)
@@ -39,7 +39,7 @@ def draw(caption, player_coords, ball_coord, column_kicking,  pause):
     for i in range(len(player_coords)):
         column_state = 0
         column = player_coords[i]
-        pipe_coord = (column[0][0] - PIPE_WIDTH/2, -2)
+        pipe_coord = (column[0][0] - PIPE_WIDTH / 2, add_y)
 
         if column_kicking == i:
             if column[0][0] > ball_coord[0]:
@@ -53,10 +53,16 @@ def draw(caption, player_coords, ball_coord, column_kicking,  pause):
             self.surface.blit(pipe_down, (pipe_coord))
 
         for position in column:
-            player_position = (position[0] - PLAYER_WIDTH/2, position[1])
             if COLUMN_COLORS[i] == "red":
+                player_position = (position[0] - PLAYER_WIDTH / 2, position[1])
                 self.surface.blit(player_red[column_state], player_position)
             else:
+                if i == 1:
+                    player_position = (position[0] - PLAYER_WIDTH / 2, position[1] + y_axis[1])
+                elif i == 3:
+                    player_position = (position[0] - PLAYER_WIDTH / 2, position[1] + y_axis[0])
+                else:
+                    player_position = (position[0] - PLAYER_WIDTH / 2, position[1] + y_axis[2])
                 self.surface.blit(player_blue[column_state], player_position)
 
     self.surface.blit(border, (75, 60))
@@ -103,7 +109,7 @@ class ScreenSelection:
         if (count < TRANSITION_TIME):
             animation_count = count
         elif count == TRANSITION_TIME:
-            animation_count = TRANSITION_TIME+0.2
+            animation_count = TRANSITION_TIME + 0.2
         else:
             animation_count = TRANSITION_TIME
 
@@ -131,9 +137,9 @@ class ScreenSelection:
 
         font = pygame.font.Font("fonts/Pixeled.ttf", 15)
         font_enter = pygame.font.Font("fonts/Pixeled.ttf", 8)
-        multiplayer = font.render("Multiplayer mode", 1, (255,255,255)).convert_alpha()
-        singleplayer = font.render("Singleplayer mode", 1, (255,255,255)).convert_alpha()
-        enter_mode = font_enter.render("Press ENTER to start the game", 1, (255,255,255)).convert_alpha()
+        multiplayer = font.render("Multiplayer mode", 1, (255, 255, 255)).convert_alpha()
+        singleplayer = font.render("Singleplayer mode", 1, (255, 255, 255)).convert_alpha()
+        enter_mode = font_enter.render("Press ENTER to start the game", 1, (255, 255, 255)).convert_alpha()
 
         # self.surface.blit(text, (5, 350))
         self.surface.blit(grass, (0, 0))
@@ -142,22 +148,21 @@ class ScreenSelection:
             ball, (animation_counter(-50, animation_count, TRANSITION_TIME),
                    animation_counter(-50, animation_count, TRANSITION_TIME)))
         self.surface.blit(
-            player_blue, (0,  animation_counter(-100, animation_count, TRANSITION_TIME)))
+            player_blue, (0, animation_counter(-100, animation_count, TRANSITION_TIME)))
         self.surface.blit(
             player1_red, (0, animation_counter(100, animation_count, TRANSITION_TIME)))
         self.surface.blit(
-            player2_red, (0,  animation_counter(100, animation_count, TRANSITION_TIME)))
+            player2_red, (0, animation_counter(100, animation_count, TRANSITION_TIME)))
         self.surface.blit(
             black_layer, (animation_counter(200, animation_count, TRANSITION_TIME), 0))
         self.surface.blit(
             title, (0, animation_counter(-400, animation_count, TRANSITION_TIME)))
         self.surface.blit(
-            singleplayer, (150, animation_counter(400, animation_count/3, TRANSITION_TIME)))
+            singleplayer, (150, animation_counter(400, animation_count / 3, TRANSITION_TIME)))
         self.surface.blit(
-            multiplayer, (155, animation_counter(450, animation_count/3, TRANSITION_TIME)))
+            multiplayer, (155, animation_counter(450, animation_count / 3, TRANSITION_TIME)))
         self.surface.blit(
-            enter_mode, (155, animation_counter(500, animation_count/3.5, TRANSITION_TIME)))
-            
+            enter_mode, (155, animation_counter(500, animation_count / 3.5, TRANSITION_TIME)))
 
         pygame.display.set_caption("Tela 1 do jogo")
         pygame.display.flip()
