@@ -79,6 +79,14 @@ def game_loop_single():
         comands_verifying()
         ball_rectx += ball_dx
         ball_recty += ball_dy
+        if ball_recty <= 95:
+            ball_dy = ball_velocity
+        if ball_recty >= 417:
+            ball_dy = ball_velocity * (-1)
+        if ball_rectx <= 121 and (ball_recty <= 100 or ball_recty >= 310):
+            ball_dx = ball_velocity
+        if ball_rectx >= 812 and (ball_recty <= 100 or ball_recty >= 310):
+            ball_dx = ball_velocity * (-1)
 
 def game_loop_multi():
     ball_rectx = 467
@@ -123,3 +131,11 @@ def game_loop_multi():
         comands_verifying()
         ball_rectx += ball_dx
         ball_recty += ball_dy
+        if ball_recty <= 95:
+            ball_dy = ball_velocity
+        if ball_recty >= 417:
+            ball_dy = ball_velocity * (-1)
+        if ball_rectx <= 121 and (ball_recty <= 100 or ball_recty >= 310):
+            ball_dx = ball_velocity
+        if ball_rectx >= 812 and (ball_recty <= 100 or ball_recty >= 310):
+            ball_dx = ball_velocity * (-1)
