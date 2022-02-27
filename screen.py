@@ -3,6 +3,8 @@ import pygame
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, TRANSITION_TIME, COLUMN_COLORS, PIPE_WIDTH
 from colors import Colors
 
+count = 0
+pause_time = -100
 
 def animation_counter(final_value, count, total_frames):
     return final_value - count * (final_value / total_frames)
@@ -39,6 +41,7 @@ def draw(caption, player_coords, ball_coord, add_y, y_axis, column_kicking, paus
     for i in range(len(player_coords)):
         column_state = 0
         column = player_coords[i]
+        pipe_coord = (column[0][0] - PIPE_WIDTH / 2, add_y)
 
         if column_kicking == i:
             if column[0][0] > ball_coord[0]:
@@ -47,10 +50,8 @@ def draw(caption, player_coords, ball_coord, add_y, y_axis, column_kicking, paus
                 column_state = 2
 
         if COLUMN_COLORS[i] == "red":
-            pipe_coord = (column[0][0] - PIPE_WIDTH / 2, -2)
             self.surface.blit(pipe_up, (pipe_coord))
         else:
-            pipe_coord = (column[0][0] - PIPE_WIDTH / 2, add_y)
             self.surface.blit(pipe_down, (pipe_coord))
 
         for position in column:
@@ -69,11 +70,38 @@ def draw(caption, player_coords, ball_coord, add_y, y_axis, column_kicking, paus
     self.surface.blit(border, (75, 60))
     self.surface.blit(placar, (0, 0))
 
+    board = pygame.image.load("img/board.png").convert_alpha()
+
+    animation_count = -1
+
     if pause is True:
+        pause_transition = 3
+        if pause_time < 0:
+            pause_time = count
+
+        if (count-pause_time < pause_transition):
+            animation_count = count-pause_time
+        elif count == pause_transition:
+            animation_count = pause_transition+0.2
+        else:
+            animation_count = pause_transition
+
+
+        behind = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        behind.set_alpha(animation_count*(128/pause_transition))
+        behind.fill(Colors["Black"])
+
+        self.surface.blit(behind, (0, 0))
+        self.surface.blit(board, (0, animation_counter(-100, animation_count, pause_transition)))
+
         pygame.draw.rect(self.surface,
-                         Colors["White"], [460, 240, 15, 50])
+                         Colors["White"], [460, 240 + animation_counter(-100, animation_count, pause_transition), 15, 50])
         pygame.draw.rect(self.surface,
-                         Colors["White"], [485, 240, 15, 50])
+                         Colors["White"], [485, 240 + animation_counter(-100, animation_count, pause_transition), 15, 50])
+    else:
+        pause_time = -100
+
+    count+=1
     pygame.display.update()
 
 
