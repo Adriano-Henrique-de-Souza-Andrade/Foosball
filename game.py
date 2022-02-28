@@ -57,12 +57,13 @@ def game_loop_single():
     ball_dy = ball_velocity * (-1)
     players_coord = INITIAL_PLAYERS_COORD
     pipe_blmv = -2
+    pipe_rdmv = -2
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
-
     screen = Screen("Evolution Foosball sp- LPC")
 
     while config.single and config.playing:
+        red_direction = 0
         blue_direction = 0
         if pygame.key.get_pressed()[pygame.K_w] and pipe_blmv > -35:
             blue_direction = -1
@@ -71,11 +72,24 @@ def game_loop_single():
             blue_direction = 1
         pipe_blmv += 3 * blue_direction
 
+        if pipe_rdmv + 210 > ball_recty and pipe_rdmv > -35:
+            red_direction = -1
+
+        elif pipe_rdmv + 310 < ball_recty and pipe_rdmv < 18:
+            red_direction = 1
+        pipe_rdmv += 3 * red_direction
+
         for i, column in enumerate(players_coord):
             for j, player in enumerate(column):
                 if COLUMN_COLORS[i] == "blue":
                     players_coord[i][j] = (
                         player[0], player[1] + COLUMNS_VELOCITY[i] * blue_direction)
+
+        for i, column in enumerate(players_coord):
+            for j, player in enumerate(column):
+                if COLUMN_COLORS[i] == "red":
+                    players_coord[i][j] = (
+                        player[0], player[1] + COLUMNS_VELOCITY[i] * red_direction)
 
         comands_verifying()
         ball_rectx += ball_dx
@@ -89,7 +103,7 @@ def game_loop_single():
         if ball_rectx >= 812 and (ball_recty <= 100 or ball_recty >= 310):
             ball_dx = ball_velocity * (-1)
 
-        screen.set_pipes(pipe_blmv, 0)
+        screen.set_pipes(pipe_blmv, pipe_rdmv)
         screen.set_players(players_coord)
         screen.set_ball((ball_rectx, ball_recty))
         screen.set_column_kicking(-1)
@@ -120,8 +134,10 @@ def game_loop_multi():
         if pygame.key.get_pressed()[pygame.K_s] and pipe_blmv < 18:
             blue_direction = 1
         pipe_blmv += 3 * blue_direction
+
         if pygame.key.get_pressed()[pygame.K_UP] and pipe_rdmv > -35:
             red_direction = -1
+
         if pygame.key.get_pressed()[pygame.K_DOWN] and pipe_rdmv < 18:
             red_direction = 1
         pipe_rdmv += 3 * red_direction
