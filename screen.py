@@ -127,7 +127,7 @@ class Screen:
         self.surface.blit(self.placar, (0, 0))
 
         animation_count = transition
-        if self.pause_start > 0 :
+        if self.pause_start > 0:
             behind = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
             behind.set_alpha(animation_count*(128/transition))
             behind.fill(Colors["Black"])

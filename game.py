@@ -17,7 +17,6 @@ def comands_verifying():
         if event.type == pygame.MOUSEBUTTONDOWN:
             pause = not pause
 
-
 def select_mode():
     count = 0
     quiting_time = -100
@@ -110,6 +109,10 @@ def game_loop_single():
         screen.set_score((0, 0))
         screen.set_pause(pause)
         screen.draw()
+        while pause and config.playing:
+            comands_verifying()
+            screen.draw()
+            screen.set_pause(pause)
 
 def game_loop_multi():
     ball_rectx = 467
@@ -173,3 +176,7 @@ def game_loop_multi():
         screen.set_score((0, 0))
         screen.set_pause(pause)
         screen.draw()
+        while pause and config.playing:
+            comands_verifying()
+            screen.draw()
+            screen.set_pause(pause)
