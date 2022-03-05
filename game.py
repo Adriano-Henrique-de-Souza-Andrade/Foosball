@@ -1,6 +1,7 @@
 import pygame
 
 import config
+import random
 from screen import ScreenSelection, Screen
 from config import pause, TRANSITION_TIME, INITIAL_PLAYERS_COORD, COLUMNS_VELOCITY, COLUMN_COLORS
 
@@ -52,8 +53,10 @@ def game_loop_single():
     ball_rectx = 467
     ball_recty = 260
     ball_velocity = 6
-    ball_dx = ball_velocity
-    ball_dy = ball_velocity * (-1)
+    directions_x = [1, -1]
+    directions_y = [1, -1]
+    ball_dx = ball_velocity * random.sample(directions_x, 1)[0]
+    ball_dy = ball_velocity * random.sample(directions_y, 1)[0]
     players_coord = INITIAL_PLAYERS_COORD
     pipe_blmv = -2
     pipe_rdmv = -2
@@ -101,6 +104,14 @@ def game_loop_single():
             ball_dx = ball_velocity
         if ball_rectx >= 812 and (ball_recty <= 100 or ball_recty >= 310):
             ball_dx = ball_velocity * (-1)
+        if ball_rectx <= 121 or ball_rectx >= 812:
+            ball_recty = 260
+            ball_rectx = 467
+        if ball_rectx <= 108 or ball_rectx >= 830:
+            ball_recty = 260
+            ball_rectx = 467
+            ball_dx = ball_velocity * random.sample(directions_x, 1)[0]
+            ball_dy = ball_velocity * random.sample(directions_y, 1)[0]
 
         screen.set_pipes(pipe_blmv, pipe_rdmv)
         screen.set_players(players_coord)
@@ -118,8 +129,10 @@ def game_loop_multi():
     ball_rectx = 467
     ball_recty = 260
     ball_velocity = 6
-    ball_dx = ball_velocity
-    ball_dy = ball_velocity * (-1)
+    directions_x = [1, -1]
+    directions_y = [1, -1]
+    ball_dx = ball_velocity * random.sample(directions_x, 1)[0]
+    ball_dy = ball_velocity * random.sample(directions_y, 1)[0]
     players_coord = INITIAL_PLAYERS_COORD
     pipe_blmv = -2
     pipe_rdmv = -2
@@ -168,6 +181,11 @@ def game_loop_multi():
             ball_dx = ball_velocity
         if ball_rectx >= 812 and (ball_recty <= 100 or ball_recty >= 310):
             ball_dx = ball_velocity * (-1)
+        if ball_rectx <= 108 or ball_rectx >= 830:
+            ball_recty = 260
+            ball_rectx = 467
+            ball_dx = ball_velocity * random.sample(directions_x, 1)[0]
+            ball_dy = ball_velocity * random.sample(directions_y, 1)[0]
         
         screen.set_pipes(pipe_blmv, pipe_rdmv)
         screen.set_players(players_coord)
