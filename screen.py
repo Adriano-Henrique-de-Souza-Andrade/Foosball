@@ -62,7 +62,7 @@ class Screen:
         self.player_coords = player_coords
 
     def set_score(self, score):
-        self.score = score
+        self.score = score 
 
     def set_ball(self, ball_coord):
         self.ball_coord = ball_coord
@@ -181,11 +181,9 @@ class ScreenSelection:
         font = pygame.font.Font("fonts/Pixeled.ttf", 15)
         font_enter = pygame.font.Font("fonts/Pixeled.ttf", 8)
         multiplayer = font.render(
-            "Multiplayer mode", 1, (255, 255, 255)).convert_alpha()
+            "Multiplayer mode - Press M", 1, (Colors["White"])).convert_alpha()
         singleplayer = font.render(
-            "Singleplayer mode", 1, (255, 255, 255)).convert_alpha()
-        enter_mode = font_enter.render(
-            "Press ENTER to start the game", 1, (255, 255, 255)).convert_alpha()
+            "Singleplayer mode - Press S", 1, (Colors["White"])).convert_alpha()
 
         # self.surface.blit(text, (5, 350))
         self.surface.blit(grass, (0, 0))
@@ -204,11 +202,8 @@ class ScreenSelection:
         self.surface.blit(
             title, (0, animation_counter(-400, animation_count, TRANSITION_TIME)))
         self.surface.blit(
-            singleplayer, (150, animation_counter(400, animation_count / 3, TRANSITION_TIME)))
+            singleplayer, (160, animation_counter(400, animation_count / 3, TRANSITION_TIME)))
         self.surface.blit(
-            multiplayer, (155, animation_counter(450, animation_count / 3, TRANSITION_TIME)))
-        self.surface.blit(
-            enter_mode, (155, animation_counter(500, animation_count / 3.5, TRANSITION_TIME)))
-
+            multiplayer, (165, animation_counter(450, animation_count / 3, TRANSITION_TIME)))
         pygame.display.set_caption("Tela 1 do jogo")
         pygame.display.flip()

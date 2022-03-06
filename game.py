@@ -95,7 +95,7 @@ def game_loop_single():
         screen.set_players(players_coord)
         screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
         screen.set_column_kicking(-1)
-        screen.set_score((0, 0))
+        screen.set_score((0, 0)) 
         screen.set_pause(pause)
         screen.draw()
         while pause and config.playing:
