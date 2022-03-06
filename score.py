@@ -15,7 +15,7 @@ class Score():
 
     def placar(self):
         screen = pygame.display.set_mode(SCREEN_SIZE)
-        score_font = pygame.font.Font('PressStart2P.ttf', 30)
+        score_font = pygame.font.Font('fonts/PressStart2P.ttf', 30)
         score_text = score_font.render('00 x 00', True, "white", "black")
         score_text_rect = score_text.get_rect()
         score_text_rect.center = (480, 30)
