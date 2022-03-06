@@ -1,7 +1,7 @@
 import pygame
 
 import config
-import random
+from ball import Ball
 from screen import ScreenSelection, Screen
 from config import pause, TRANSITION_TIME, INITIAL_PLAYERS_COORD, COLUMNS_VELOCITY, COLUMN_COLORS
 
@@ -17,6 +17,7 @@ def comands_verifying():
             config.playing = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             pause = not pause
+
 
 def select_mode():
     count = 0
@@ -50,13 +51,6 @@ def select_mode():
 
 
 def game_loop_single():
-    ball_rectx = 467
-    ball_recty = 260
-    ball_velocity = 6
-    directions_x = [1, -1]
-    directions_y = [1, -1]
-    ball_dx = ball_velocity * random.sample(directions_x, 1)[0]
-    ball_dy = ball_velocity * random.sample(directions_y, 1)[0]
     players_coord = INITIAL_PLAYERS_COORD
     pipe_blmv = -2
     pipe_rdmv = -2
@@ -74,10 +68,10 @@ def game_loop_single():
             blue_direction = 1
         pipe_blmv += 3 * blue_direction
 
-        if pipe_rdmv + 210 > ball_recty and pipe_rdmv > -35:
+        if pipe_rdmv + 210 > Ball.ball_recty and pipe_rdmv > -35:
             red_direction = -1
 
-        elif pipe_rdmv + 310 < ball_recty and pipe_rdmv < 18:
+        elif pipe_rdmv + 310 < Ball.ball_recty and pipe_rdmv < 18:
             red_direction = 1
         pipe_rdmv += 3 * red_direction
 
@@ -94,28 +88,12 @@ def game_loop_single():
                         player[0], player[1] + COLUMNS_VELOCITY[i] * red_direction)
 
         comands_verifying()
-        ball_rectx += ball_dx
-        ball_recty += ball_dy
-        if ball_recty <= 95:
-            ball_dy = ball_velocity
-        if ball_recty >= 417:
-            ball_dy = ball_velocity * (-1)
-        if ball_rectx <= 121 and (ball_recty <= 100 or ball_recty >= 310):
-            ball_dx = ball_velocity
-        if ball_rectx >= 812 and (ball_recty <= 100 or ball_recty >= 310):
-            ball_dx = ball_velocity * (-1)
-        if ball_rectx <= 121 or ball_rectx >= 812:
-            ball_recty = 260
-            ball_rectx = 467
-        if ball_rectx <= 108 or ball_rectx >= 830:
-            ball_recty = 260
-            ball_rectx = 467
-            ball_dx = ball_velocity * random.sample(directions_x, 1)[0]
-            ball_dy = ball_velocity * random.sample(directions_y, 1)[0]
+        Ball.movement(Ball)
+        Ball.collision_walls(Ball)
 
         screen.set_pipes(pipe_blmv, pipe_rdmv)
         screen.set_players(players_coord)
-        screen.set_ball((ball_rectx, ball_recty))
+        screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
         screen.set_column_kicking(-1)
         screen.set_score((0, 0))
         screen.set_pause(pause)
@@ -125,14 +103,8 @@ def game_loop_single():
             screen.draw()
             screen.set_pause(pause)
 
+
 def game_loop_multi():
-    ball_rectx = 467
-    ball_recty = 260
-    ball_velocity = 6
-    directions_x = [1, -1]
-    directions_y = [1, -1]
-    ball_dx = ball_velocity * random.sample(directions_x, 1)[0]
-    ball_dy = ball_velocity * random.sample(directions_y, 1)[0]
     players_coord = INITIAL_PLAYERS_COORD
     pipe_blmv = -2
     pipe_rdmv = -2
@@ -171,25 +143,12 @@ def game_loop_multi():
                         player[0], player[1] + COLUMNS_VELOCITY[i] * red_direction)
 
         comands_verifying()
-        ball_rectx += ball_dx
-        ball_recty += ball_dy
-        if ball_recty <= 95:
-            ball_dy = ball_velocity
-        if ball_recty >= 417:
-            ball_dy = ball_velocity * (-1)
-        if ball_rectx <= 121 and (ball_recty <= 100 or ball_recty >= 310):
-            ball_dx = ball_velocity
-        if ball_rectx >= 812 and (ball_recty <= 100 or ball_recty >= 310):
-            ball_dx = ball_velocity * (-1)
-        if ball_rectx <= 108 or ball_rectx >= 830:
-            ball_recty = 260
-            ball_rectx = 467
-            ball_dx = ball_velocity * random.sample(directions_x, 1)[0]
-            ball_dy = ball_velocity * random.sample(directions_y, 1)[0]
+        Ball.movement(Ball)
+        Ball.collision_walls(Ball)
         
         screen.set_pipes(pipe_blmv, pipe_rdmv)
         screen.set_players(players_coord)
-        screen.set_ball((ball_rectx, ball_recty))
+        screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
         screen.set_column_kicking(-1)
         screen.set_score((0, 0))
         screen.set_pause(pause)
