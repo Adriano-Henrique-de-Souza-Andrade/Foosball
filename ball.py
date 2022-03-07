@@ -61,16 +61,16 @@ class Ball:
             if self.ball_rectx + BALL_SIZE >= rect[0] - 4 and self.ball_rectx + BALL_SIZE <= rect[0]:
                 self.ball_dx = self.ball_velocity * -1
                 collision = column
-                chute = pygame.mixer.Sound('sound/CHUTE.mp3')
+                chute = pygame.mixer.Sound(CHUTE)
                 pygame.mixer.Sound.play(chute)
             elif self.ball_rectx >= rect[0] + PLAYER_WIDTH and self.ball_rectx <= rect[0] + PLAYER_WIDTH + 4:
                 self.ball_dx = self.ball_velocity
                 collision = column
-                chute = pygame.mixer.Sound('sound/CHUTE.mp3')
+                chute = pygame.mixer.Sound(CHUTE)
                 pygame.mixer.Sound.play(chute)
             elif self.ball_rectx + BALL_SIZE > rect[0] and self.ball_rectx < rect[0] + PLAYER_WIDTH:
                 self.ball_dy = self.ball_dy * (-1)
-                chute = pygame.mixer.Sound('sound/CHUTE.mp3')
+                chute = pygame.mixer.Sound(CHUTE)
                 pygame.mixer.Sound.play(chute)
 
         if column >= self.actual_column and self.column_kicking >= 0:
