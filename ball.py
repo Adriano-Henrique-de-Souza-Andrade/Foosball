@@ -53,7 +53,7 @@ class Ball:
         collision = -1
         rect = (int(player[0] - PLAYER_WIDTH/2),  player[1])
 
-        if self.ball_recty + BALL_SIZE >= rect[1] - 4 and self.ball_recty <= rect[1] + PLAYER_HEIGHT + 4:
+        if self.ball_recty + BALL_SIZE >= rect[1] - 4 and self.ball_recty <= rect[1] + PLAYER_HEIGHT - 7:
             if self.ball_rectx + BALL_SIZE >= rect[0] - 4 and self.ball_rectx + BALL_SIZE <= rect[0]:
                 self.ball_dx = self.ball_velocity * -1
                 collision = column

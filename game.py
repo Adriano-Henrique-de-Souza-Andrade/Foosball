@@ -68,10 +68,10 @@ def game_loop_single():
             blue_direction = 1
         pipe_blmv += 3 * blue_direction
 
-        if pipe_rdmv + 210 > Ball.ball_recty and pipe_rdmv > -35:
+        if pipe_rdmv + 100 > Ball.ball_recty and pipe_rdmv > -35:
             red_direction = -1
 
-        elif pipe_rdmv + 310 < Ball.ball_recty and pipe_rdmv < 18:
+        elif pipe_rdmv + 270 < Ball.ball_recty and pipe_rdmv < 18:
             red_direction = 1
         pipe_rdmv += 3 * red_direction
 
