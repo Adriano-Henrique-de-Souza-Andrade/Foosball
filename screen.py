@@ -1,6 +1,7 @@
 import pygame
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, TRANSITION_TIME, COLUMN_COLORS, PIPE_WIDTH
 from colors import Colors
+from ball import Ball
 
 count = 0
 pause_time = -100
@@ -119,12 +120,18 @@ class Screen:
         self.surface.blit(self.table, (75, 60))
         self.surface.blit(self.ball, self.ball_coord)
 
+
         for i in range(len(self.player_coords)):
             self.draw_pipes(i)
             self.draw_players_column(i)
 
         self.surface.blit(self.border, (75, 60))
         self.surface.blit(self.placar, (0, 0))
+        score_font = pygame.font.Font("fonts/PressStart2P.ttf", 25)
+        score_text = score_font.render(f"{Ball.is_goal(Ball)[0]}    {Ball.is_goal(Ball)[1]}", True, Colors["White"])
+        score_text_rect = score_text.get_rect()
+        score_text_rect.center = (480, 30)
+        self.surface.blit(score_text, score_text_rect)
 
         animation_count = transition
         if self.pause_start > 0:

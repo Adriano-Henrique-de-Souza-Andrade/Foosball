@@ -88,8 +88,6 @@ def game_loop_single():
         comands_verifying()
         Ball.movement(Ball)
         Ball.collision_walls(Ball)
-        is_goal = Ball.is_goal(Ball)
-        score = (score[0] + is_goal[0], score[1] + is_goal[1])
         
         screen.set_pipes(pipe_blmv, pipe_rdmv)
         screen.set_players(players_coord)

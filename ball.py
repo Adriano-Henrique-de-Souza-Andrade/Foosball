@@ -1,5 +1,6 @@
+
 import random
-from config import PLAYER_HEIGHT, PLAYER_WIDTH, BALL_SIZE, SCREEN_HEIGHT
+from config import PLAYER_HEIGHT, PLAYER_WIDTH, BALL_SIZE, SCREEN_HEIGHT, goal, goal1, goal2
 
 
 class Ball:
@@ -20,13 +21,16 @@ class Ball:
         self.ball_recty += self.ball_dy
 
     def is_goal(self):
-        goal = (0, 0)
+        global goal, goal1, goal2
         if self.ball_recty >= SCREEN_HEIGHT/2 - 61 and self.ball_recty <= SCREEN_HEIGHT/2 + 61 and (self.ball_rectx <= 121 or self.ball_rectx >= 812):
 
-            if self.ball_rectx <= 121:
-                goal = (0, 1)
-            elif self.ball_rectx >= 812:
-                goal = (1, 0)
+            if self.ball_rectx <= 120:
+                goal1 = 1
+            elif self.ball_rectx >= 815:
+                goal2 = 1
+            goal = (goal[0] + goal1, goal[1] + goal2)
+            goal1 = 0
+            goal2 = 0
 
             self.ball_recty = 260
             self.ball_rectx = 467
