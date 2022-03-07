@@ -1,5 +1,5 @@
 import pygame
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, TRANSITION_TIME, COLUMN_COLORS, PIPE_WIDTH
+from config import GAME_FONT, SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, TRANSITION_TIME, COLUMN_COLORS, PIPE_WIDTH
 from colors import Colors
 from ball import Ball
 
@@ -10,6 +10,9 @@ pause_time = -100
 def animation_counter(final_value, count, total_frames):
     return final_value - count * (final_value / total_frames)
 
+def center_in_screen (width):
+    return (SCREEN_WIDTH - width)/2
+
 class Screen:
     surface: pygame.Surface
     player_coords = []
@@ -18,13 +21,17 @@ class Screen:
     column_kicking = -1
     count = 0
 
-    pause_start = -100
-    pause_end = -100
+    panel_start = -100
+    panel_end = -100
 
     result_start = -100
     
     ball_coord = (0, 0)
     score = (0, 0)
+
+    is_paused = False
+    is_finished = False
+
     def __init__(self, title):
         self.width = SCREEN_WIDTH
         self.height = SCREEN_HEIGHT
@@ -53,7 +60,8 @@ class Screen:
             pygame.image.load("img/player_blue_kicking_right.png").convert_alpha(),
         ]
         self.board = pygame.image.load("img/board.png").convert_alpha()
-
+        self.title = pygame.font.Font(GAME_FONT, 25)
+        self.text = pygame.font.Font(GAME_FONT, 15)
 
     def set_pipes(self, blue, red):
         self.blue_pipe = blue
@@ -65,6 +73,14 @@ class Screen:
     def set_score(self, score):
         self.score = score 
 
+    def set_finish(self, type_game):
+        self.is_finished = True
+        self.type_game = type_game
+
+        if self.panel_start < 0:
+            self.panel_start = self.count
+        self.panel_end = -100
+
     def set_ball(self, ball_coord):
         self.ball_coord = ball_coord
 
@@ -72,14 +88,16 @@ class Screen:
         self.column_kicking = column_kicking
 
     def set_pause(self, pause):
+        if self.is_finished: 
+            return
+        self.is_paused = pause
+        
+
         if pause:
-            if self.pause_start < 0:
-                self.pause_start = self.count
-            self.pause_end = -100
+            if self.panel_start < 0:
+                self.panel_start = self.count
         else:
-            if self.pause_end < 0:
-                self.pause_end = self.count
-            self.pause_start = -100
+            self.panel_start = -100
 
     def draw_pipes(self, col_index):
         column = self.player_coords[col_index]
@@ -114,7 +132,7 @@ class Screen:
                     self.player_blue[column_state], player_position)
 
     def draw(self):
-        transition = 3
+        
 
         self.surface.blit(self.floor, (0, 0))
         self.surface.blit(self.table, (75, 60))
@@ -133,25 +151,49 @@ class Screen:
         score_text_rect.center = (480, 30)
         self.surface.blit(score_text, score_text_rect)
 
-        animation_count = transition
-        if self.pause_start > 0:
-            behind = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-            behind.set_alpha(animation_count*(128/transition))
-            behind.fill(Colors["Black"])
-
-            self.surface.blit(behind, (0, 0))
-            self.surface.blit(self.board, (0, animation_counter(-100, animation_count, transition)))
-
-            pygame.draw.rect(self.surface,
-                                Colors["White"], [460, 240 + animation_counter(-100, animation_count, transition), 15, 50])
-            pygame.draw.rect(self.surface,
-                                Colors["White"], [485, 240 + animation_counter(-100, animation_count, transition), 15, 50])
-
+        
+        if self.panel_start > 0:
+            self.draw_panel( "PAUSE" if self.is_paused else "FINISH_GAME" )
+            
         self.count += 1
         
         pygame.display.flip()
         self.game_clock.tick(60)
 
+    def draw_panel(self, panel_type):
+        transition = 3
+        if (self.count - self.panel_start < transition):
+            animation_count = self.count - self.panel_start
+        elif self.count == transition:
+            animation_count = transition + 0.2
+        else:
+            animation_count = transition
+
+        print(animation_count)
+        title = ""
+        text_return = ""
+        text_home = ""
+        if panel_type == "PAUSE":
+            title = "GAME PAUSED"
+            text_return = "CLICK TO PLAY"
+            text_home = "PRESS H TO RETURN TO HOMEPAGE"
+
+        elif panel_type == "FINISH_GAME":
+            title = "YOU WON"
+            text_return = "CLICK TO PLAY"
+            text_home = "PRESS H TO RETURN TO HOMEPAGE"
+        
+        behind = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        behind.set_alpha(animation_count*(128/transition))
+        behind.fill(Colors["Black"])
+
+        self.surface.blit(behind, (0, 0))
+        self.surface.blit(self.board, (0, animation_counter(-100, animation_count, transition)))
+
+        pygame.draw.rect(self.surface,
+                            Colors["White"], [460, 240 + animation_counter(-100, animation_count, transition), 15, 50])
+        pygame.draw.rect(self.surface,
+                            Colors["White"], [485, 240 + animation_counter(-100, animation_count, transition), 15, 50])
 
 
 class ScreenSelection:
@@ -186,11 +228,10 @@ class ScreenSelection:
         pygame.font.init()
 
         font = pygame.font.Font("fonts/Pixeled.ttf", 15)
-        font_enter = pygame.font.Font("fonts/Pixeled.ttf", 8)
         multiplayer = font.render(
-            "Multiplayer mode - Press M", 1, (Colors["White"])).convert_alpha()
+            "Multiplayer mode - Press M", False, (Colors["White"])).convert_alpha()
         singleplayer = font.render(
-            "Singleplayer mode - Press S", 1, (Colors["White"])).convert_alpha()
+            "Singleplayer mode - Press S", False, (Colors["White"])).convert_alpha()
 
         # self.surface.blit(text, (5, 350))
         self.surface.blit(grass, (0, 0))

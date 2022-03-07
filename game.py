@@ -2,8 +2,9 @@ import pygame
 
 import config
 from ball import Ball
+from players import Players
 from screen import ScreenSelection, Screen
-from config import pause, TRANSITION_TIME, INITIAL_PLAYERS_COORD, COLUMNS_VELOCITY, COLUMN_COLORS
+from config import MULTIPLAYER, SINGLEPLAYER, pause, TRANSITION_TIME, INITIAL_PLAYERS_COORD, COLUMNS_VELOCITY, COLUMN_COLORS
 
 pygame.mixer.init()
 pygame.mixer.music.load("sound/ost/old and classic foosball.mp3")
@@ -49,109 +50,45 @@ def select_mode():
 
         count += 1
 
-
-def game_loop_single():
-    players_coord = INITIAL_PLAYERS_COORD
-    pipe_blmv = -2
-    pipe_rdmv = -2
+def game_loop():
+    
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
+
     screen = Screen("Evolution Foosball sp- LPC")
+    players = Players(SINGLEPLAYER if config.single else MULTIPLAYER)
+
     score = (0, 0)
-    while config.single and config.playing:
-        red_direction = 0
-        blue_direction = 0
-        if pygame.key.get_pressed()[pygame.K_w] and pipe_blmv > -35:
-            blue_direction = -1
 
-        elif pygame.key.get_pressed()[pygame.K_s] and pipe_blmv < 18:
-            blue_direction = 1
-        pipe_blmv += 3 * blue_direction
 
-        if pipe_rdmv + 100 > Ball.ball_recty and pipe_rdmv > -35:
-            red_direction = -1
-
-        elif pipe_rdmv + 270 < Ball.ball_recty and pipe_rdmv < 18:
-            red_direction = 1
-        pipe_rdmv += 3 * red_direction
-
-        for i, column in enumerate(players_coord):
-            for j, player in enumerate(column):
-                if COLUMN_COLORS[i] == "blue":
-                    players_coord[i][j] = (
-                        player[0], player[1] + COLUMNS_VELOCITY[i] * blue_direction)
-                if COLUMN_COLORS[i] == "red":
-                    players_coord[i][j] = (
-                        player[0], player[1] + COLUMNS_VELOCITY[i] * red_direction)
-                Ball.collision_player(Ball, players_coord[i][j], i)
-
+    while config.playing:
+        players.move_players()
         comands_verifying()
-        Ball.movement(Ball)
-        Ball.collision_walls(Ball)
-        
-        screen.set_pipes(pipe_blmv, pipe_rdmv)
-        screen.set_players(players_coord)
-        screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
-        screen.set_column_kicking(Ball.column_kicking)
-        screen.set_score(score)
+
+        if not pause and  (score[0] < 1 or score[1] < 1):
+
+            Ball.movement(Ball)
+            Ball.collision_walls(Ball)
+            is_goal = Ball.is_goal(Ball)
+            score = (score[0] + is_goal[0], score[1] + is_goal[1])
+
+            if score[0] == 1 or score[1] == 1:
+                screen.set_finish(
+                    "SINGLEPLAYER" if config.single else "MULTIPLATER")
+                
+
+            screen.set_pipes(players.pipe_blmv, players.pipe_rdmv)
+            screen.set_players(players.coords)
+            screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
+            screen.set_column_kicking(Ball.column_kicking)
+            screen.set_score(score)
+
+
         screen.set_pause(pause)
         screen.draw()
-        while pause and config.playing:
-            comands_verifying()
-            screen.draw()
-            screen.set_pause(pause)
 
+        if (config.single and players.game_type == MULTIPLAYER) or (config.multi and players.game_type == SINGLEPLAYER):
+            screen = Screen("Evolution Foosball sp- LPC")
+            players = Players(SINGLEPLAYER if config.single else MULTIPLAYER)
 
-def game_loop_multi():
-    players_coord = INITIAL_PLAYERS_COORD
-    pipe_blmv = -2
-    pipe_rdmv = -2
-    pygame.mixer.music.load("sound/ost/counting on you.mp3")
-    pygame.mixer.music.play(-1)
-    score = (0, 0)
-    screen = Screen("Evolution Foosball mp- LPC")
-
-    while config.multi and config.playing:
-        blue_direction = 0
-        red_direction = 0
-        if pygame.key.get_pressed()[pygame.K_w] and pipe_blmv > -35:
-            blue_direction = -1
-
-        if pygame.key.get_pressed()[pygame.K_s] and pipe_blmv < 18:
-            blue_direction = 1
-        pipe_blmv += 3 * blue_direction
-
-        if pygame.key.get_pressed()[pygame.K_UP] and pipe_rdmv > -35:
-            red_direction = -1
-
-        if pygame.key.get_pressed()[pygame.K_DOWN] and pipe_rdmv < 18:
-            red_direction = 1
-        pipe_rdmv += 3 * red_direction
-
-        for i, column in enumerate(players_coord):
-            for j, player in enumerate(column):
-                if COLUMN_COLORS[i] == "blue":
-                    players_coord[i][j] = (
-                        player[0], player[1] + COLUMNS_VELOCITY[i] * blue_direction)
-                if COLUMN_COLORS[i] == "red":
-                    players_coord[i][j] = (
-                        player[0], player[1] + COLUMNS_VELOCITY[i] * red_direction)
-                Ball.collision_player(Ball, players_coord[i][j], i)
-
-        comands_verifying()
-        Ball.movement(Ball)
-        Ball.collision_walls(Ball)
-        is_goal = Ball.is_goal(Ball)
-        score = (score[0] + is_goal[0], score[1] + is_goal[1])
-        
-        screen.set_pipes(pipe_blmv, pipe_rdmv)
-        screen.set_players(players_coord)
-        screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
-        screen.set_column_kicking(Ball.column_kicking)
-        screen.set_score(score)
-        screen.set_pause(pause)
-        screen.draw()
-        while pause and config.playing:
-            comands_verifying()
-            screen.draw()
-            screen.set_pause(pause)
+            score = (0, 0)
