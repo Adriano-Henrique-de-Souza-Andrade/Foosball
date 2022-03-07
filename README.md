@@ -27,7 +27,7 @@ Desenvolvedores: Adriano Henrique, Fernando Freires, Guilherme Santos, Guilherme
   3. Incremento no score e decremento na quantidadde de "vidas/bolas" restante.
   4. Jogadores movem-se, apesar de estarem em posições diferentes, em mesmo número de pixels.
   5. Após um gol, a bola reinicia no meio de campo.
-  6. O player que fizer 7 gols é o vencedor.
+  6. O player que fizer 3 gols é o vencedor.
                                                     
                                                     
      

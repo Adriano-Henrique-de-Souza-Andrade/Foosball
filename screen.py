@@ -10,8 +10,10 @@ pause_time = -100
 def animation_counter(final_value, count, total_frames):
     return final_value - count * (final_value / total_frames)
 
-def center_in_screen (width):
+
+def center_in_screen(width):
     return (SCREEN_WIDTH - width)/2
+
 
 class Screen:
     surface: pygame.Surface
@@ -25,7 +27,7 @@ class Screen:
     panel_end = -100
 
     result_start = -100
-    
+
     ball_coord = (0, 0)
 
     is_paused = False
@@ -39,7 +41,6 @@ class Screen:
 
         self.game_clock = pygame.time.Clock()
 
-
         self.floor = pygame.image.load("img/floor.png").convert_alpha()
         self.table = pygame.image.load("img/table.png").convert_alpha()
         self.border = pygame.image.load("img/border.png").convert_alpha()
@@ -49,14 +50,18 @@ class Screen:
         self.pipe_up = pygame.image.load("img/pipe_up.png").convert_alpha()
         self.player_red = [
             pygame.image.load("img/player_red.png").convert_alpha(),
-            pygame.image.load("img/player_red_kicking_left.png").convert_alpha(),
-            pygame.image.load("img/player_red_kicking_right.png").convert_alpha(),
+            pygame.image.load(
+                "img/player_red_kicking_left.png").convert_alpha(),
+            pygame.image.load(
+                "img/player_red_kicking_right.png").convert_alpha(),
         ]
 
         self.player_blue = [
             pygame.image.load("img/player_blue.png").convert_alpha(),
-            pygame.image.load("img/player_blue_kicking_left.png").convert_alpha(),
-            pygame.image.load("img/player_blue_kicking_right.png").convert_alpha(),
+            pygame.image.load(
+                "img/player_blue_kicking_left.png").convert_alpha(),
+            pygame.image.load(
+                "img/player_blue_kicking_right.png").convert_alpha(),
         ]
         self.board = pygame.image.load("img/board.png").convert_alpha()
         self.title = pygame.font.Font(GAME_FONT, 30)
@@ -74,7 +79,7 @@ class Screen:
         self.player_coords = player_coords
 
     def set_score(self, score):
-        self.score = score 
+        self.score = score
 
     def set_finish(self, type_game):
         self.is_finished = True
@@ -91,10 +96,9 @@ class Screen:
         self.column_kicking = column_kicking
 
     def set_pause(self, pause):
-        if self.is_finished: 
+        if self.is_finished:
             return
         self.is_paused = pause
-        
 
         if pause:
             if self.panel_start < 0:
@@ -135,12 +139,10 @@ class Screen:
                     self.player_blue[column_state], player_position)
 
     def draw(self):
-        
 
         self.surface.blit(self.floor, (0, 0))
         self.surface.blit(self.table, (75, 60))
         self.surface.blit(self.ball, self.ball_coord)
-
 
         for i in range(len(self.player_coords)):
             self.draw_pipes(i)
@@ -149,17 +151,17 @@ class Screen:
         self.surface.blit(self.border, (75, 60))
         self.surface.blit(self.placar, (0, 0))
         score_font = pygame.font.Font("fonts/PressStart2P.ttf", 25)
-        score_text = score_font.render(f"{self.score[0]}    {self.score[1]}", True, Colors["White"])
+        score_text = score_font.render(
+            f"{self.score[0]}    {self.score[1]}", True, Colors["White"])
         score_text_rect = score_text.get_rect()
         score_text_rect.center = (480, 30)
         self.surface.blit(score_text, score_text_rect)
 
-        
         if self.panel_start > 0:
-            self.draw_panel( "PAUSE" if self.is_paused else "FINISH_GAME" )
-            
+            self.draw_panel("PAUSE" if self.is_paused else "FINISH_GAME")
+
         self.count += 1
-        
+
         pygame.display.flip()
         self.game_clock.tick(60)
 
@@ -183,7 +185,7 @@ class Screen:
             text_two = "PRESS R TO RESTART GAME"
             text_three = "PRESS H TO RETURN TO HOMEPAGE"
 
-        elif panel_type == "FINISH_GAME": 
+        elif panel_type == "FINISH_GAME":
             if self.score[0] == MAX_GOALS:
                 text_title = "YOU WIN" if self.type_game == "SINGLEPLAYER" else "PLAYER 1 WON!"
             elif self.score[1] == MAX_GOALS:
@@ -191,7 +193,7 @@ class Screen:
 
             text_one = "PRESS R TO PLAY AGAIN"
             text_two = "PRESS H TO RETURN TO HOMEPAGE"
-        
+
         title = self.title.render(text_title, False, (Colors["White"]))
 
         one = self.text.render(text_one, False, (Colors["White"]))
@@ -203,13 +205,17 @@ class Screen:
         behind.fill(Colors["Black"])
 
         self.surface.blit(behind, (0, 0))
-        self.surface.blit(self.board, (0, animation_counter(-100, animation_count, transition)))
+        self.surface.blit(
+            self.board, (0, animation_counter(-100, animation_count, transition)))
 
-        self.surface.blit(title, (center_in_screen(title.get_width()), 150 + animation_counter(-100, animation_count, transition)))  
-        self.surface.blit(one, (center_in_screen(one.get_width()), 280 + animation_counter(-100, animation_count, transition)))  
-        self.surface.blit(two, (center_in_screen(two.get_width()),300 + animation_counter(-100, animation_count, transition)))  
-        self.surface.blit(three, (center_in_screen(three.get_width()),320 + animation_counter(-100, animation_count, transition)))  
-
+        self.surface.blit(title, (center_in_screen(
+            title.get_width()), 150 + animation_counter(-100, animation_count, transition)))
+        self.surface.blit(one, (center_in_screen(
+            one.get_width()), 280 + animation_counter(-100, animation_count, transition)))
+        self.surface.blit(two, (center_in_screen(
+            two.get_width()), 300 + animation_counter(-100, animation_count, transition)))
+        self.surface.blit(three, (center_in_screen(
+            three.get_width()), 320 + animation_counter(-100, animation_count, transition)))
 
 
 class ScreenSelection:
