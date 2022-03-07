@@ -11,11 +11,15 @@ class Ball:
     ball_dx = ball_velocity * random.sample(directions_x, 1)[0]
     ball_dy = ball_velocity * random.sample(directions_y, 1)[0]
 
+    is_kicking = 0
+    column_kicking = -1
+    actual_column = -1
+
     def movement(self):
         self.ball_rectx += self.ball_dx
         self.ball_recty += self.ball_dy
 
-    def collision_walls(self):  
+    def collision_walls(self):
         # Goal
         if self.ball_recty >= SCREEN_HEIGHT/2 - 61 and self.ball_recty <= SCREEN_HEIGHT/2 + 61:
             if self.ball_rectx <= 121 or self.ball_rectx >= 812:
@@ -38,20 +42,36 @@ class Ball:
         if self.ball_rectx >= 812:
             self.ball_dx = self.ball_velocity * (-1)
 
-    def collision_players(self, players):
+    def collision_player(self, player, column):
         
-        for (i, column) in enumerate(players):
-            for player in column:
-                rect = (int(player[0] - PLAYER_WIDTH/2),  player[1])
-                if self.ball_recty + BALL_SIZE >= rect[1] -4 and self.ball_recty <= rect[1] + PLAYER_HEIGHT + 4:
-                    if self.ball_rectx + BALL_SIZE >= rect[0] -4 and self.ball_rectx + BALL_SIZE <= rect[0]:
-                        self.ball_dx = self.ball_velocity * -1
-                        return i
-                    elif self.ball_rectx >= rect[0] + PLAYER_WIDTH and self.ball_rectx <= rect[0] + PLAYER_WIDTH +4:
-                        self.ball_dx = self.ball_velocity 
-                        return i
-                    elif self.ball_rectx + BALL_SIZE > rect[0] and self.ball_rectx < rect[0] + PLAYER_WIDTH: 
-                        self.ball_dy = self.ball_dy * (-1) 
+        collision = -1
+        rect = (int(player[0] - PLAYER_WIDTH/2),  player[1])
 
+        if self.ball_recty + BALL_SIZE >= rect[1] - 4 and self.ball_recty <= rect[1] + PLAYER_HEIGHT + 4:
+            if self.ball_rectx + BALL_SIZE >= rect[0] - 4 and self.ball_rectx + BALL_SIZE <= rect[0]:
+                self.ball_dx = self.ball_velocity * -1
+                collision = column
+                print(collision)
+            elif self.ball_rectx >= rect[0] + PLAYER_WIDTH and self.ball_rectx <= rect[0] + PLAYER_WIDTH + 4:
+                self.ball_dx = self.ball_velocity
+                collision =  column
+                print(collision)
+            elif self.ball_rectx + BALL_SIZE > rect[0] and self.ball_rectx < rect[0] + PLAYER_WIDTH:
+                self.ball_dy = self.ball_dy * (-1)
 
-        return -1
+        if column >= self.actual_column and self.column_kicking >=0:
+            self.actual_column = column
+            return
+
+        if collision == -1 and self.column_kicking >= 0:
+            self.is_kicking += 1
+
+        if self.is_kicking == 4:
+            self.is_kicking = 0
+            self.column_kicking = collision
+        if collision >= 0:
+            self.column_kicking = collision
+            self.is_kicking = 0
+        self.actual_column = column
+        
+        

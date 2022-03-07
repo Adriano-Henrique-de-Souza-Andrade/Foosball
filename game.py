@@ -57,8 +57,6 @@ def game_loop_single():
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
     screen = Screen("Evolution Foosball sp- LPC")
-    column_kicking = -1
-    is_kicking = 0
 
     while config.single and config.playing:
         red_direction = 0
@@ -82,32 +80,20 @@ def game_loop_single():
                 if COLUMN_COLORS[i] == "blue":
                     players_coord[i][j] = (
                         player[0], player[1] + COLUMNS_VELOCITY[i] * blue_direction)
-
-        for i, column in enumerate(players_coord):
-            for j, player in enumerate(column):
                 if COLUMN_COLORS[i] == "red":
                     players_coord[i][j] = (
                         player[0], player[1] + COLUMNS_VELOCITY[i] * red_direction)
+                Ball.collision_player(Ball, players_coord[i][j], i)
 
         comands_verifying()
         Ball.movement(Ball)
         Ball.collision_walls(Ball)
-        collision = Ball.collision_players(Ball, players_coord)
-        if collision == -1 and column_kicking >= 0:
-            is_kicking+=1
-
-        if is_kicking == 4:
-            is_kicking  = 0
-            column_kicking = collision
-        if collision >= 0:
-            column_kicking = collision
-            is_kicking  = 0   
 
         screen.set_pipes(pipe_blmv, pipe_rdmv)
         screen.set_players(players_coord)
         screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
-        screen.set_column_kicking(column_kicking)
-        screen.set_score((0, 0)) 
+        screen.set_column_kicking(Ball.column_kicking)
+        screen.set_score((0, 0))
         screen.set_pause(pause)
         screen.draw()
         while pause and config.playing:
@@ -122,7 +108,7 @@ def game_loop_multi():
     pipe_rdmv = -2
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
-    
+
     screen = Screen("Evolution Foosball mp- LPC")
 
     while config.multi and config.playing:
@@ -147,22 +133,19 @@ def game_loop_multi():
                 if COLUMN_COLORS[i] == "blue":
                     players_coord[i][j] = (
                         player[0], player[1] + COLUMNS_VELOCITY[i] * blue_direction)
-
-        for i, column in enumerate(players_coord):
-            for j, player in enumerate(column):
                 if COLUMN_COLORS[i] == "red":
                     players_coord[i][j] = (
                         player[0], player[1] + COLUMNS_VELOCITY[i] * red_direction)
+                Ball.collision_player(Ball, players_coord[i][j], i)
 
         comands_verifying()
         Ball.movement(Ball)
         Ball.collision_walls(Ball)
-        Ball.collision_players(Ball, players_coord)
-        
+
         screen.set_pipes(pipe_blmv, pipe_rdmv)
         screen.set_players(players_coord)
         screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
-        screen.set_column_kicking(Ball.collision_players(Ball, players_coord))
+        screen.set_column_kicking(Ball.column_kicking)
         screen.set_score((0, 0))
         screen.set_pause(pause)
         screen.draw()
