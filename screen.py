@@ -173,13 +173,15 @@ class Screen:
             animation_count = transition
 
         text_title = ""
-        text_return = ""
-        text_home = ""
+        text_one = ""
+        text_two = ""
+        text_three = ""
 
         if panel_type == "PAUSE":
             text_title = "GAME PAUSED"
-            text_return = "CLICK TO PLAY"
-            text_home = "PRESS H TO RETURN TO HOMEPAGE"
+            text_one = "CLICK TO RETURN"
+            text_two = "PRESS R TO RESTART GAME"
+            text_three = "PRESS H TO RETURN TO HOMEPAGE"
 
         elif panel_type == "FINISH_GAME": 
             if self.score[0] == MAX_GOALS:
@@ -187,12 +189,14 @@ class Screen:
             elif self.score[1] == MAX_GOALS:
                 text_title = "YOU WIN" if self.type_game == "SINGLEPLAYER" else "PLAYER 2 WON!"
 
-            text_return = "CLICK TO PLAY"
-            text_home = "PRESS H TO RETURN TO HOMEPAGE"
+            text_one = "PRESS R TO PLAY AGAIN"
+            text_two = "PRESS H TO RETURN TO HOMEPAGE"
         
         title = self.title.render(text_title, False, (Colors["White"]))
-        retrn = self.text.render(text_return, False, (Colors["White"]))
-        home = self.text.render(text_home, False, (Colors["White"]))
+
+        one = self.text.render(text_one, False, (Colors["White"]))
+        two = self.text.render(text_two, False, (Colors["White"]))
+        three = self.text.render(text_three, False, (Colors["White"]))
 
         behind = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         behind.set_alpha(animation_count*(128/transition))
@@ -202,8 +206,9 @@ class Screen:
         self.surface.blit(self.board, (0, animation_counter(-100, animation_count, transition)))
 
         self.surface.blit(title, (center_in_screen(title.get_width()), 150 + animation_counter(-100, animation_count, transition)))  
-        self.surface.blit(retrn, (center_in_screen(retrn.get_width()), 280 + animation_counter(-100, animation_count, transition)))  
-        self.surface.blit(home, (center_in_screen(home.get_width()),300 + animation_counter(-100, animation_count, transition)))  
+        self.surface.blit(one, (center_in_screen(one.get_width()), 280 + animation_counter(-100, animation_count, transition)))  
+        self.surface.blit(two, (center_in_screen(two.get_width()),300 + animation_counter(-100, animation_count, transition)))  
+        self.surface.blit(three, (center_in_screen(three.get_width()),320 + animation_counter(-100, animation_count, transition)))  
 
 
 

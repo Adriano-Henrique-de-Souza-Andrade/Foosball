@@ -9,8 +9,7 @@ from screen import ScreenSelection, Screen
 from config import MAX_GOALS, MULTIPLAYER, SINGLEPLAYER, initial_players_coord, pause, TRANSITION_TIME
 
 pygame.mixer.init()
-pygame.mixer.music.load("sound/ost/old and classic foosball.mp3")
-pygame.mixer.music.play(-1)
+
 
 screen = None
 players = None
@@ -29,11 +28,21 @@ def comands_verifying():
         pause = False
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_r]:
+    if keys[pygame.K_r] and (finished or pause):
         start_game()
+    if keys[pygame.K_h] and (finished or pause):
+        config.selecting = True
+        config.multi = False
+        config.single = False
+        start_game()
+        select_mode()
+
 
 
 def select_mode():
+    pygame.mixer.music.load("sound/ost/old and classic foosball.mp3")
+    pygame.mixer.music.play(-1)
+
     count = 0
     quiting_time = -100
 
