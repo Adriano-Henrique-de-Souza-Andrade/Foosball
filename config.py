@@ -13,6 +13,7 @@ pause = False
 playing = True
 TRANSITION_TIME = 5
 GAME_FONT = "fonts/Pixeled.ttf"
+CHUTE = "sound/chute.mp3"
 COLUMN_COLORS = ['blue', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'red']
 COLUMNS_VELOCITY = [5, 6, 6, 4, 4, 6, 6, 5]
 
