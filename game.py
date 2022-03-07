@@ -34,8 +34,9 @@ def comands_verifying():
         config.selecting = True
         config.multi = False
         config.single = False
-        start_game()
         select_mode()
+        start_game()
+
 
 
 
@@ -58,14 +59,17 @@ def select_mode():
                 config.playing = False
                 pygame.display.quit()
                 pygame.quit()
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_s]:
             quiting_time = count
             config.single = True
+            config.multi = False
 
         if keys[pygame.K_m]:
             quiting_time = count
             config.multi = True
+            config.single = False
 
         if count == quiting_time + TRANSITION_TIME:
             config.selecting = False
