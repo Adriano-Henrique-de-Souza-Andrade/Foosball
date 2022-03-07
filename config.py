@@ -15,14 +15,11 @@ TRANSITION_TIME = 5
 GAME_FONT = "fonts/Pixeled.ttf"
 COLUMN_COLORS = ['blue', 'blue', 'red', 'blue', 'red', 'blue', 'red', 'red']
 COLUMNS_VELOCITY = [5, 6, 6, 4, 4, 6, 6, 5]
-goal = (0, 0)
-goal1 = 0
-goal2 = 0
 
 MULTIPLAYER = 2
 SINGLEPLAYER = 1
 
-MAX_GOALS = 1
+MAX_GOALS = 2
 
 
 def initial_players_coord():

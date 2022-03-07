@@ -1,5 +1,5 @@
 import pygame
-from config import GAME_FONT, SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, TRANSITION_TIME, COLUMN_COLORS, PIPE_WIDTH
+from config import GAME_FONT, MAX_GOALS, SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, TRANSITION_TIME, COLUMN_COLORS, PIPE_WIDTH
 from colors import Colors
 from ball import Ball
 
@@ -27,7 +27,6 @@ class Screen:
     result_start = -100
     
     ball_coord = (0, 0)
-    score = (0, 0)
 
     is_paused = False
     is_finished = False
@@ -60,8 +59,12 @@ class Screen:
             pygame.image.load("img/player_blue_kicking_right.png").convert_alpha(),
         ]
         self.board = pygame.image.load("img/board.png").convert_alpha()
-        self.title = pygame.font.Font(GAME_FONT, 25)
-        self.text = pygame.font.Font(GAME_FONT, 15)
+        self.title = pygame.font.Font(GAME_FONT, 30)
+        self.text = pygame.font.Font(GAME_FONT, 10)
+
+        self.is_finished = False
+        self.score = (0, 0)
+        self.panel_start = -100
 
     def set_pipes(self, blue, red):
         self.blue_pipe = blue
@@ -146,7 +149,7 @@ class Screen:
         self.surface.blit(self.border, (75, 60))
         self.surface.blit(self.placar, (0, 0))
         score_font = pygame.font.Font("fonts/PressStart2P.ttf", 25)
-        score_text = score_font.render(f"{Ball.is_goal(Ball)[0]}    {Ball.is_goal(Ball)[1]}", True, Colors["White"])
+        score_text = score_font.render(f"{self.score[1]}    {self.score[0]}", True, Colors["White"])
         score_text_rect = score_text.get_rect()
         score_text_rect.center = (480, 30)
         self.surface.blit(score_text, score_text_rect)
@@ -169,19 +172,28 @@ class Screen:
         else:
             animation_count = transition
 
-        title = ""
+        text_title = ""
         text_return = ""
         text_home = ""
+
         if panel_type == "PAUSE":
-            title = "GAME PAUSED"
+            text_title = "GAME PAUSED"
             text_return = "CLICK TO PLAY"
             text_home = "PRESS H TO RETURN TO HOMEPAGE"
 
-        elif panel_type == "FINISH_GAME":
-            title = "YOU WON"
+        elif panel_type == "FINISH_GAME": 
+            if self.score[0] == MAX_GOALS:
+                text_title = "YOU LOOSE" if self.type_game == "SINGLEPLAYER" else "PLAYER 1 WON!"
+            elif self.score[1] == MAX_GOALS:
+                text_title = "YOU WIN" if self.type_game == "SINGLEPLAYER" else "PLAYER 2 WON!"
+
             text_return = "CLICK TO PLAY"
             text_home = "PRESS H TO RETURN TO HOMEPAGE"
         
+        title = self.title.render(text_title, False, (Colors["White"]))
+        retrn = self.text.render(text_return, False, (Colors["White"]))
+        home = self.text.render(text_home, False, (Colors["White"]))
+
         behind = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         behind.set_alpha(animation_count*(128/transition))
         behind.fill(Colors["Black"])
@@ -189,10 +201,10 @@ class Screen:
         self.surface.blit(behind, (0, 0))
         self.surface.blit(self.board, (0, animation_counter(-100, animation_count, transition)))
 
-        pygame.draw.rect(self.surface,
-                            Colors["White"], [460, 240 + animation_counter(-100, animation_count, transition), 15, 50])
-        pygame.draw.rect(self.surface,
-                            Colors["White"], [485, 240 + animation_counter(-100, animation_count, transition), 15, 50])
+        self.surface.blit(title, (center_in_screen(title.get_width()), 150 + animation_counter(-100, animation_count, transition)))  
+        self.surface.blit(retrn, (center_in_screen(retrn.get_width()), 280 + animation_counter(-100, animation_count, transition)))  
+        self.surface.blit(home, (center_in_screen(home.get_width()),300 + animation_counter(-100, animation_count, transition)))  
+
 
 
 class ScreenSelection:

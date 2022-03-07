@@ -6,7 +6,7 @@ import config
 from ball import Ball
 from players import Players
 from screen import ScreenSelection, Screen
-from config import  MAX_GOALS, MULTIPLAYER, SINGLEPLAYER, initial_players_coord, pause, TRANSITION_TIME
+from config import MAX_GOALS, MULTIPLAYER, SINGLEPLAYER, initial_players_coord, pause, TRANSITION_TIME
 
 pygame.mixer.init()
 pygame.mixer.music.load("sound/ost/old and classic foosball.mp3")
@@ -15,6 +15,7 @@ pygame.mixer.music.play(-1)
 screen = None
 players = None
 score = (0, 0)
+finished = False
 
 
 def comands_verifying():
@@ -24,10 +25,13 @@ def comands_verifying():
             config.playing = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             pause = not pause
+    if finished:
+        pause = False
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_r]:
-        start_game() 
+        start_game()
+
 
 def select_mode():
     count = 0
@@ -65,54 +69,50 @@ def start_game():
     global players
     global score
     global pause
+    global finished
 
     Ball.reset(Ball)
     players = Players(SINGLEPLAYER if config.single else MULTIPLAYER)
+    screen = Screen("Evolution Foosball " +
+                    "sp" if config.single else "mp" + " - LPC")
+    score = (0, 0)
 
-    screen = Screen("Evolution Foosball sp- LPC")
-
-    score = (0, 0) 
     pause = False
+    finished = False
 
 
 def game_loop():
     global screen
     global players
     global score
+    global finished
 
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
 
     start_game()
-    
+
     while config.playing:
-        players.move_players()
+
         comands_verifying()
-        
-        
-        print(initial_players_coord())
 
-        if not pause and  (score[0] < MAX_GOALS or score[1] < MAX_GOALS):
-
+        if not pause and not finished:
+            players.move_players()
             Ball.movement(Ball)
             Ball.collision_walls(Ball)
             is_goal = Ball.is_goal(Ball)
-
             score = (score[0] + is_goal[0], score[1] + is_goal[1])
 
             if score[0] == MAX_GOALS or score[1] == MAX_GOALS:
                 screen.set_finish(
                     "SINGLEPLAYER" if config.single else "MULTIPLATER")
-                
-            comands_verifying()
-            screen.set_pipes(players.pipe_blmv, players.pipe_rdmv)
-            screen.set_players(players.coords)
-            screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
-            screen.set_column_kicking(Ball.column_kicking)
-            screen.set_score(score)
+                finished = True
 
+        screen.set_pipes(players.pipe_blmv, players.pipe_rdmv)
+        screen.set_players(players.coords)
+        screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
+        screen.set_column_kicking(Ball.column_kicking)
+        screen.set_score(score)
 
         screen.set_pause(pause)
         screen.draw()
-
-        
