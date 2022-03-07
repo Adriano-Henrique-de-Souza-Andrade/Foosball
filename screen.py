@@ -149,7 +149,7 @@ class Screen:
         self.surface.blit(self.border, (75, 60))
         self.surface.blit(self.placar, (0, 0))
         score_font = pygame.font.Font("fonts/PressStart2P.ttf", 25)
-        score_text = score_font.render(f"{self.score[1]}    {self.score[0]}", True, Colors["White"])
+        score_text = score_font.render(f"{self.score[0]}    {self.score[1]}", True, Colors["White"])
         score_text_rect = score_text.get_rect()
         score_text_rect.center = (480, 30)
         self.surface.blit(score_text, score_text_rect)
@@ -185,9 +185,9 @@ class Screen:
 
         elif panel_type == "FINISH_GAME": 
             if self.score[0] == MAX_GOALS:
-                text_title = "YOU LOOSE" if self.type_game == "SINGLEPLAYER" else "PLAYER 1 WON!"
+                text_title = "YOU WIN" if self.type_game == "SINGLEPLAYER" else "PLAYER 1 WON!"
             elif self.score[1] == MAX_GOALS:
-                text_title = "YOU WIN" if self.type_game == "SINGLEPLAYER" else "PLAYER 2 WON!"
+                text_title = "YOU LOOSE" if self.type_game == "SINGLEPLAYER" else "PLAYER 2 WON!"
 
             text_one = "PRESS R TO PLAY AGAIN"
             text_two = "PRESS H TO RETURN TO HOMEPAGE"

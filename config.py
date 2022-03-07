@@ -19,7 +19,7 @@ COLUMNS_VELOCITY = [5, 6, 6, 4, 4, 6, 6, 5]
 MULTIPLAYER = 2
 SINGLEPLAYER = 1
 
-MAX_GOALS = 2
+MAX_GOALS = 3
 
 
 def initial_players_coord():
