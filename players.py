@@ -1,17 +1,18 @@
 import pygame
 from ball import Ball
-from config import COLUMN_COLORS, COLUMNS_VELOCITY, INITIAL_PLAYERS_COORD, SINGLEPLAYER
+from config import COLUMN_COLORS, COLUMNS_VELOCITY, SINGLEPLAYER, initial_players_coord
 
 
 class Players:
-    coords = INITIAL_PLAYERS_COORD
-    pipe_blmv = -2
-    pipe_rdmv = -2
-    blue_direction = 0
-    red_direction = 0
 
     def __init__(self, game_type):
         self.game_type = game_type
+
+        self.pipe_blmv = -2
+        self.pipe_rdmv = -2
+        self.blue_direction = 0
+        self.red_direction = 0
+        self.coords = initial_players_coord()
 
     def move_blue(self):
         if pygame.key.get_pressed()[pygame.K_w] and self.pipe_blmv > -35:
@@ -35,12 +36,12 @@ class Players:
 
             if pygame.key.get_pressed()[pygame.K_DOWN] and self.pipe_rdmv < 18:
                 self.red_direction = 1
-            self.pipe_rdmv += 3 *self. red_direction
+            self.pipe_rdmv += 3 * self. red_direction
 
     def move_players(self):
         self.blue_direction = 0
         self.red_direction = 0
-        
+
         self.move_blue()
         self.move_red()
 

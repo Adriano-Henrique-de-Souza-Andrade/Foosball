@@ -169,7 +169,6 @@ class Screen:
         else:
             animation_count = transition
 
-        print(animation_count)
         title = ""
         text_return = ""
         text_home = ""

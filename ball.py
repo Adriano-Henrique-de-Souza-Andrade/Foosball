@@ -7,10 +7,8 @@ class Ball:
     ball_rectx = 467
     ball_recty = 260
     ball_velocity = 4
-    directions_x = [1, -1]
-    directions_y = [1, -1]
-    ball_dx = ball_velocity * random.sample(directions_x, 1)[0]
-    ball_dy = ball_velocity * random.sample(directions_y, 1)[0]
+    ball_dx = ball_velocity * random.sample([1, -1], 1)[0]
+    ball_dy = ball_velocity * random.sample([1, -1], 1)[0]
 
     is_kicking = 0
     column_kicking = -1
@@ -34,10 +32,9 @@ class Ball:
 
             self.ball_recty = 260
             self.ball_rectx = 467
-            self.ball_dx = self.ball_velocity * \
-                random.sample(self.directions_x, 1)[0]
+            self.ball_dx = self.ball_velocity * random.sample([1, -1], 1)[0]
             self.ball_dy = self.ball_velocity * \
-                random.sample(self.directions_y, 1)[0]
+                random.sample([1, -1], 1)[0]
 
         return goal
 
@@ -81,3 +78,14 @@ class Ball:
             self.column_kicking = collision
             self.is_kicking = 0
         self.actual_column = column
+
+    def reset(self):
+        self.ball_rectx = 467
+        self.ball_recty = 260
+        self.ball_velocity = 4
+        self.ball_dx = self.ball_velocity * random.sample([1, -1], 1)[0]
+        self.ball_dy = self.ball_velocity * random.sample([1, -1], 1)[0]
+
+        self.is_kicking = 0
+        self.column_kicking = -1
+        self.actual_column = -1
