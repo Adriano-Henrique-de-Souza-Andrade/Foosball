@@ -57,7 +57,7 @@ def game_loop_single():
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
     screen = Screen("Evolution Foosball sp- LPC")
-
+    score = (0, 0)
     while config.single and config.playing:
         red_direction = 0
         blue_direction = 0
@@ -88,12 +88,14 @@ def game_loop_single():
         comands_verifying()
         Ball.movement(Ball)
         Ball.collision_walls(Ball)
-
+        is_goal = Ball.is_goal(Ball)
+        score = (score[0] + is_goal[0], score[1] + is_goal[1])
+        
         screen.set_pipes(pipe_blmv, pipe_rdmv)
         screen.set_players(players_coord)
         screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
         screen.set_column_kicking(Ball.column_kicking)
-        screen.set_score((0, 0))
+        screen.set_score(score)
         screen.set_pause(pause)
         screen.draw()
         while pause and config.playing:
@@ -108,7 +110,7 @@ def game_loop_multi():
     pipe_rdmv = -2
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
-
+    score = (0, 0)
     screen = Screen("Evolution Foosball mp- LPC")
 
     while config.multi and config.playing:
@@ -141,12 +143,14 @@ def game_loop_multi():
         comands_verifying()
         Ball.movement(Ball)
         Ball.collision_walls(Ball)
-
+        is_goal = Ball.is_goal(Ball)
+        score = (score[0] + is_goal[0], score[1] + is_goal[1])
+        
         screen.set_pipes(pipe_blmv, pipe_rdmv)
         screen.set_players(players_coord)
         screen.set_ball((Ball.ball_rectx, Ball.ball_recty))
         screen.set_column_kicking(Ball.column_kicking)
-        screen.set_score((0, 0))
+        screen.set_score(score)
         screen.set_pause(pause)
         screen.draw()
         while pause and config.playing:
