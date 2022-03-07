@@ -266,8 +266,8 @@ class ScreenSelection:
         self.surface.blit(
             title, (0, animation_counter(-400, animation_count, TRANSITION_TIME)))
         self.surface.blit(
-            singleplayer, (160, animation_counter(400, animation_count / 3, TRANSITION_TIME)))
+            singleplayer, (50, animation_counter(400, animation_count / 3, TRANSITION_TIME)))
         self.surface.blit(
-            multiplayer, (165, animation_counter(450, animation_count / 3, TRANSITION_TIME)))
+            multiplayer, (50, animation_counter(450, animation_count / 3, TRANSITION_TIME)))
         pygame.display.set_caption("Tela 1 do jogo")
         pygame.display.flip()
