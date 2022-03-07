@@ -33,11 +33,11 @@ class Ball:
             self.ball_dx = self.ball_velocity * random.sample([1, -1], 1)[0]
             self.ball_dy = self.ball_velocity * \
                 random.sample([1, -1], 1)[0]
-            pygame.mixer.music.load('sound/torcida.mp3')
-            pygame.mixer.music.play(0)
+            crowd = pygame.mixer.Sound('sound/torcida.mp3')
+            pygame.mixer.Sound.play(crowd)
             time.sleep(2)
-            pygame.mixer.music.load('sound/apito.mp3')
-            pygame.mixer.music.play(0)
+            apito = pygame.mixer.Sound('sound/apito.mp3')
+            pygame.mixer.Sound.play(apito)
 
         return goal
 
@@ -61,17 +61,17 @@ class Ball:
             if self.ball_rectx + BALL_SIZE >= rect[0] - 4 and self.ball_rectx + BALL_SIZE <= rect[0]:
                 self.ball_dx = self.ball_velocity * -1
                 collision = column
-                pygame.mixer.music.load(CHUTE)
-                pygame.mixer.music.play(0)
+                chute = pygame.mixer.Sound('sound/CHUTE.mp3')
+                pygame.mixer.Sound.play(chute)
             elif self.ball_rectx >= rect[0] + PLAYER_WIDTH and self.ball_rectx <= rect[0] + PLAYER_WIDTH + 4:
                 self.ball_dx = self.ball_velocity
                 collision = column
-                pygame.mixer.music.load(CHUTE)
-                pygame.mixer.music.play(0)
+                chute = pygame.mixer.Sound('sound/CHUTE.mp3')
+                pygame.mixer.Sound.play(chute)
             elif self.ball_rectx + BALL_SIZE > rect[0] and self.ball_rectx < rect[0] + PLAYER_WIDTH:
                 self.ball_dy = self.ball_dy * (-1)
-                pygame.mixer.music.load(CHUTE)
-                pygame.mixer.music.play(0)
+                chute = pygame.mixer.Sound('sound/CHUTE.mp3')
+                pygame.mixer.Sound.play(chute)
 
         if column >= self.actual_column and self.column_kicking >= 0:
             self.actual_column = column

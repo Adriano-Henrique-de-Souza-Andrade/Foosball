@@ -102,6 +102,7 @@ def game_loop():
 
     pygame.mixer.music.load("sound/ost/counting on you.mp3")
     pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.5)
 
     start_game()
 
